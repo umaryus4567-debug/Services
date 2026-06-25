@@ -44,11 +44,21 @@ body {
 
 @media(min-width:768px){
 
-    .head{
-        flex-direction:row;
-        justify-content:space-between;
+            .head{
+        flex-direction:column;
         align-items:center;
+        justify-content:center;
+        gap:20px;
     }
+
+    .nav{
+        justify-content:center;
+    }
+
+    .auth-buttons{
+        justify-content:center;
+    }
+    
 }
 
 /* Logo */
@@ -57,8 +67,8 @@ body {
 }
 
 .logo1 img {
-    width: 80px;
-    height: 80px;
+    width: clamp(70px,15vw,90px);
+    height: clamp(70px,15vw,90px);
     border-radius: 50%;
     border: 3px solid white;
     object-fit: cover;
@@ -193,8 +203,7 @@ body {
 }
 
 .hero-content h2{
-
-    font-size:3rem;
+    font-size:clamp(2rem,6vw,3rem);
 
     line-height:1.2;
 
@@ -353,6 +362,11 @@ footer {
     padding: 50px 20px;
 }
 
+.footer-contact p,
+.footer-hours p{
+    word-wrap:break-word;
+}
+
 .footer-contact,
 .footer-hours {
     margin-bottom: 30px;
@@ -383,6 +397,8 @@ footer a:hover {
     color:white;
 
     display:grid;
+    
+    justify-items:center;
 
     grid-template-columns:
     repeat(auto-fit,minmax(180px,1fr));
@@ -437,29 +453,110 @@ footer a:hover {
 /* Tablet and Desktop */
 @media (min-width: 768px) {
 
-    .head {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
+    .head{
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        gap:20px;
+    }
+    .logo{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+    .nav{
+        justify-content:center;
+        max-width:900px;
+    }
+
+    .auth-buttons{
+        justify-content:center;
     }
 
     .services-container,
     .reasons-container,
-    .steps {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    .steps{
+        grid-template-columns:
+        repeat(auto-fit,minmax(250px,1fr));
     }
 
-    .hero-content h2 {
-        font-size: 3rem;
+    footer{
+        display:grid;
+        grid-template-columns:
+        repeat(3,1fr);
+        gap:30px;
     }
 
-    footer {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 30px;
+    .footer-bottom{
+        grid-column:1/-1;
     }
 
-    .footer-bottom {
-        grid-column: 1 / -1;
+}
+    /* ===================================
+   MOBILE RESPONSIVE IMPROVEMENTS
+=================================== */
+
+@media (max-width: 767px){
+
+    .logo h2{
+        font-size:1.2rem;
+        padding:0 10px;
     }
+
+    .nav{
+        width:100%;
+        gap:8px;
+    flex-wrap:wrap;
+    justify-content:center;
+    max-width:900px;
+    }
+
+    .nav a{
+        font-size:.9rem;
+        padding:8px;
+    }
+
+    .hero{
+        min-height:60vh;
+    }
+
+    .hero-content{
+        padding:25px;
+        text-align:center;
+    }
+
+    .hero-content h2{
+        font-size:2rem;
+    }
+
+    #n{
+        font-size:1rem;
+    }
+
+    .btn{
+        width:100%;
+        max-width:250px;
+    }
+
+    .service-card,
+    .reason,
+    .step{
+        padding:20px;
+    }
+
+    .stat-item h2{
+        font-size:2rem;
+    }
+
+    footer{
+        text-align:center;
+    }
+
+    .floating-whatsapp{
+        width:55px;
+        height:55px;
+        font-size:24px;
+    }
+
 }

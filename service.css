@@ -58,12 +58,12 @@ nav a:hover{
 }
 
 .hero h1{
-    font-size:3rem;
+    font-size:clamp(2rem,6vw,3rem);
     margin-bottom:15px;
 }
 
 .hero p{
-    font-size:1.2rem;
+    font-size:clamp(1rem,3vw,1.2rem);
     margin-bottom:30px;
 }
 
@@ -127,6 +127,7 @@ section h2{
     border-radius:12px;
     box-shadow:0 4px 15px rgba(0,0,0,.1);
     transition:.3s;
+    height:100%;
 }
 
 .card:hover{
@@ -201,14 +202,17 @@ footer{
     background:#0d47a1;
     color:white;
     text-align:center;
-    padding:20px;
+    padding:25px 15px;
+    line-height:1.8;
 }
 .service-stats{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
     gap:20px;
     padding:50px 8%;
     background:white;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+
+    justify-items:center;
 }
 
 .stat-box{
@@ -251,7 +255,9 @@ footer{
 }
 
 .search-service{
-    margin-bottom:30px;
+    max-width:700px;
+    margin:0 auto 30px;
+    padding:0 20px;
 }
 
 .search-service input{
@@ -296,6 +302,15 @@ font-size:28px;
 
 box-shadow:
 0 8px 25px rgba(0,0,0,.25);
+
+    z-index:999;
+
+    transition:.3s;
+}
+
+.floating-whatsapp:hover{
+
+    transform:scale(1.1);
 }
 
 /* Responsive */
@@ -304,16 +319,22 @@ box-shadow:
 
     header{
         flex-direction:column;
+        text-align:center;
         gap:15px;
+        padding:15px;
     }
 
     nav ul{
         flex-wrap:wrap;
         justify-content:center;
+        gap:10px;
     }
 
-    .hero h1{
-        font-size:2rem;
+    nav ul li{
+        list-style:none;
     }
+    .card{
+    text-align:center;
+}
 
 }

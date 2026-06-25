@@ -22,8 +22,9 @@ header{
 }
 
 .logo{
-    font-size:26px;
+    font-size:clamp(20px,4vw,26px);
     font-weight:bold;
+    text-align:center;
 }
 
 nav ul{
@@ -63,13 +64,14 @@ nav a:hover{
 }
 
 .hero h1{
-    font-size:48px;
+    font-size:clamp(2rem,6vw,48px);
     margin-bottom:20px;
 }
 
 .hero p{
     line-height:1.8;
     margin-bottom:30px;
+    font-size:1.05rem;
 }
 
 /* WhatsApp Button */
@@ -103,6 +105,11 @@ nav a:hover{
     padding:30px;
     border-radius:12px;
     box-shadow:0 5px 20px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.support-card:hover{
+    transform:translateY(-6px);
 }
 
 .support-card h3{
@@ -162,8 +169,13 @@ nav a:hover{
     padding:14px 25px;
     border-radius:8px;
     font-weight:bold;
+     transition:.3s;
 }
-
+.call-btn:hover,
+.contact-btn:hover,
+.index-btn:hover{
+    transform:translateY(-3px);
+}
 .call-btn{
     background:#ff9800;
 }
@@ -193,14 +205,71 @@ footer{
     header{
         flex-direction:column;
         gap:15px;
+        text-align:center;
     }
 
     nav ul{
         flex-wrap:wrap;
         justify-content:center;
+        gap:10px;
+    }
+
+    .hero{
+        padding:80px 15px;
     }
 
     .hero h1{
-        font-size:34px;
+        font-size:2rem;
     }
+
+    .hero p{
+        font-size:1rem;
+    }
+
+    .support-section{
+        padding:50px 5%;
+    }
+
+    .support-card{
+        padding:20px;
+    }
+
+    .buttons{
+        flex-direction:column;
+        align-items:center;
+    }
+
+    .call-btn,
+    .contact-btn,
+    .index-btn{
+        width:100%;
+        max-width:280px;
+        text-align:center;
+    }
+
+}
+
+
+@media(max-width:480px){
+
+    .logo{
+        font-size:18px;
+    }
+
+    .hero h1{
+        font-size:1.7rem;
+    }
+
+    .hero p{
+        font-size:.95rem;
+    }
+
+    .hours-box{
+        padding:20px;
+    }
+
+    footer{
+        font-size:.9rem;
+    }
+
 }

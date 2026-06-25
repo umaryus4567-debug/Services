@@ -22,8 +22,9 @@ header{
 }
 
 .logo{
-    font-size:24px;
+    font-size:clamp(20px,4vw,24px);
     font-weight:bold;
+    text-align:center;
 }
 
 nav{
@@ -58,8 +59,8 @@ nav a:hover{
 }
 
 .hero h1{
-    font-size:40px;
     margin-bottom:15px;
+    font-size:clamp(2rem,6vw,40px);
 }
 
 .hero p{
@@ -70,10 +71,10 @@ nav a:hover{
 /* Contact Section */
 
 .contact-section{
-    padding:60px 8%;
+    padding:60px 5%;
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:40px;
+    gap:30px;
 }
 
 .contact-info,
@@ -116,6 +117,9 @@ nav a:hover{
     flex-wrap:wrap;
     gap:10px;
     margin-top:20px;
+}
+.action-buttons .btn{
+    text-align:center;
 }
 
 .btn{
@@ -224,24 +228,81 @@ footer{
 }
 
 /* Mobile */
-
 @media(max-width:768px){
 
     header{
         flex-direction:column;
         gap:15px;
+        text-align:center;
     }
 
     nav{
         flex-wrap:wrap;
         justify-content:center;
+        gap:10px;
     }
 
     .contact-section{
         grid-template-columns:1fr;
+        padding:40px 5%;
+    }
+
+    .contact-info,
+    .contact-form{
+        padding:20px;
+    }
+
+    .hero{
+        padding:70px 15px;
     }
 
     .hero h1{
-        font-size:30px;
+        font-size:2rem;
     }
+
+    .action-buttons{
+        flex-direction:column;
+    }
+
+    .action-buttons .btn{
+        width:100%;
+    }
+
+    .btn.call,
+    .btn.whatsapp,
+    .btn.index{
+        margin:0;
+    }
+
+    input,
+    textarea,
+    button{
+        font-size:16px;
+    }
+
+}
+
+@media(max-width:480px){
+
+    .logo{
+        font-size:18px;
+    }
+
+    .hero h1{
+        font-size:1.7rem;
+    }
+
+    .hero p{
+        font-size:.95rem;
+    }
+
+    .contact-info h2,
+    .contact-form h2{
+        font-size:1.4rem;
+    }
+
+    .about p{
+        font-size:.95rem;
+    }
+
 }

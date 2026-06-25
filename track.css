@@ -22,9 +22,10 @@ justify-content:space-between;
 align-items:center;
 }
 
-.logo{
-font-size:24px;
+     .logo{
+font-size:clamp(20px,4vw,24px);
 font-weight:bold;
+text-align:center;
 }
 
 nav{
@@ -55,10 +56,14 @@ padding:80px 20px;
 }
 
 .hero h1{
-font-size:42px;
+font-size:clamp(2rem,6vw,42px);
 margin-bottom:15px;
 }
-
+.hero p{
+max-width:600px;
+margin:auto;
+line-height:1.7;
+}
 /* Search */
 
 .tracker{
@@ -88,6 +93,7 @@ padding:14px;
 border:1px solid #ddd;
 border-radius:10px;
 margin-bottom:15px;
+font-size: 16px;
 }
 
 .search-card button{
@@ -99,6 +105,10 @@ color:white;
 font-weight:bold;
 border-radius:10px;
 cursor:pointer;
+transition: 0.3s;
+}
+.search-card button:hover{
+transform:translateY(-2px);
 }
 
 /* Result */
@@ -174,16 +184,66 @@ transform:translateY(-3px);
 
 header{
 flex-direction:column;
-gap:10px;
+gap:15px;
+text-align:center;
 }
 
 nav{
 flex-wrap:wrap;
 justify-content:center;
+gap:10px;
+}
+
+.hero{
+padding:60px 15px;
 }
 
 .hero h1{
-font-size:30px;
+font-size:2rem;
+}
+
+.hero p{
+font-size:1rem;
+}
+
+.tracker{
+padding:30px 15px;
+}
+
+.search-card{
+padding:20px;
+}
+
+#result{
+padding:15px;
+}
+
+.result-card{
+padding:15px;
+}
+
+}
+
+@media(max-width:480px){
+
+.logo{
+font-size:18px;
+}
+
+.hero h1{
+font-size:1.7rem;
+}
+
+.hero p{
+font-size:.95rem;
+}
+
+.search-card h2{
+font-size:1.2rem;
+}
+
+.request-id{
+font-size:12px;
 }
 
 }
