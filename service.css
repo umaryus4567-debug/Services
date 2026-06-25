@@ -1,0 +1,319 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI, sans-serif;
+}
+
+body{
+    background:#f5f7fa;
+    color:#333;
+}
+
+/* Header */
+
+header{
+    background:#0d47a1;
+    color:white;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 8%;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+nav ul{
+    list-style:none;
+    display:flex;
+    gap:20px;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    font-weight:500;
+}
+
+nav a:hover{
+    color:#ffd54f;
+}
+
+/* Hero */
+
+.hero{
+    background:linear-gradient(
+        rgba(0,0,0,.65),
+        rgba(0,0,0,.65)
+    ),
+    url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3');
+    
+    background-size:cover;
+    background-position:center;
+
+    color:white;
+    text-align:center;
+    padding:120px 20px;
+}
+
+.hero h1{
+    font-size:3rem;
+    margin-bottom:15px;
+}
+
+.hero p{
+    font-size:1.2rem;
+    margin-bottom:30px;
+}
+
+.hero-buttons{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+/* Buttons */
+
+.btn{
+    text-decoration:none;
+    padding:14px 25px;
+    border-radius:8px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.whatsapp{
+    background:#25D366;
+    color:white;
+}
+
+.call{
+    background:#ff9800;
+    color:white;
+}
+.track{
+  background: grey;
+  color: white;
+}
+.btn:hover{
+    transform:translateY(-3px);
+}
+
+/* Sections */
+
+section{
+    padding:70px 8%;
+}
+
+section h2{
+    text-align:center;
+    margin-bottom:30px;
+    color:#0d47a1;
+}
+
+/* Services */
+
+.service-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 4px 15px rgba(0,0,0,.1);
+    transition:.3s;
+}
+
+.card:hover{
+
+    transform:
+    translateY(-10px);
+
+    box-shadow:
+    0 15px 30px
+    rgba(13,71,161,.15);
+}
+
+.card h3{
+    color:#0d47a1;
+    margin-bottom:10px;
+}
+
+/* About */
+
+.about{
+    text-align:center;
+    max-width:900px;
+    margin:auto;
+}
+
+/* Staff Login */
+
+.staff form{
+    max-width:400px;
+    margin:auto;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.staff input{
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+}
+
+.staff button{
+    background:#0d47a1;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.staff button:hover{
+    background:#08306b;
+}
+
+/* Contact */
+
+.contact{
+    text-align:center;
+}
+
+.contact-buttons{
+    margin-top:20px;
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+/* Footer */
+
+footer{
+    background:#0d47a1;
+    color:white;
+    text-align:center;
+    padding:20px;
+}
+.service-stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:20px;
+    padding:50px 8%;
+    background:white;
+}
+
+.stat-box{
+    background:#fff;
+    padding:25px;
+    text-align:center;
+    border-radius:12px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.stat-box h2{
+    color:#0d47a1;
+    font-size:2.5rem;
+}
+
+.stat-box p{
+    margin-top:10px;
+}
+
+.icon{
+    font-size:50px;
+    margin-bottom:15px;
+}
+
+.service-btn{
+
+    display:inline-block;
+
+    margin-top:15px;
+
+    padding:10px 18px;
+
+    background:#0d47a1;
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:8px;
+}
+
+.search-service{
+    margin-bottom:30px;
+}
+
+.search-service input{
+
+    width:100%;
+
+    padding:15px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    font-size:16px;
+}
+.floating-whatsapp{
+
+position:fixed;
+
+right:20px;
+
+bottom:20px;
+
+width:60px;
+
+height:60px;
+
+background:#25D366;
+
+color:white;
+
+border-radius:50%;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+text-decoration:none;
+
+font-size:28px;
+
+box-shadow:
+0 8px 25px rgba(0,0,0,.25);
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+    header{
+        flex-direction:column;
+        gap:15px;
+    }
+
+    nav ul{
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+
+    .hero h1{
+        font-size:2rem;
+    }
+
+}

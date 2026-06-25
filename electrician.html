@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Technician Management</title>
+
+<link rel="stylesheet"
+href="electrician.css">
+
+</head>
+<body>
+
+<h1>Technician Management</h1>
+
+<div class="add-tech">
+
+    <input
+    type="text"
+    id="techName"
+    placeholder="Technician Name">
+
+    <input
+    type="text"
+    id="techPhone"
+    placeholder="Phone Number">
+
+    <select id="techStatus">
+
+        <option value="Available">
+            Available
+        </option>
+
+        <option value="Busy">
+            Busy
+        </option>
+
+        <option value="Offline">
+            Offline
+        </option>
+
+    </select>
+
+    <button id="addTechBtn">
+        Add Technician
+    </button>
+
+</div>
+
+<div id="techniciansContainer">
+
+</div>
+
+<script
+type="module"
+src="electrician.js">
+</script>
+
+</body>
+</html>

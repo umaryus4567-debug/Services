@@ -1,0 +1,189 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f4f6f9;
+color:#333;
+min-height:100vh;
+}
+
+/* Header */
+
+header{
+background:#0d47a1;
+color:white;
+padding:15px 8%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-size:24px;
+font-weight:bold;
+}
+
+nav{
+display:flex;
+gap:20px;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+}
+
+/* Hero */
+
+.hero{
+background:linear-gradient(
+rgba(0,0,0,.6),
+rgba(0,0,0,.6)
+),
+url("con.jpg");
+
+background-size:cover;
+background-position:center;
+
+color:white;
+text-align:center;
+padding:80px 20px;
+}
+
+.hero h1{
+font-size:42px;
+margin-bottom:15px;
+}
+
+/* Search */
+
+.tracker{
+padding:50px 20px;
+display:flex;
+justify-content:center;
+}
+
+.search-card{
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 5px 20px rgba(0,0,0,.1);
+width:100%;
+max-width:500px;
+text-align:center;
+}
+
+.search-card h2{
+margin-bottom:20px;
+color:#0d47a1;
+}
+
+.search-card input{
+width:100%;
+padding:14px;
+border:1px solid #ddd;
+border-radius:10px;
+margin-bottom:15px;
+}
+
+.search-card button{
+width:100%;
+padding:14px;
+border:none;
+background:#0d47a1;
+color:white;
+font-weight:bold;
+border-radius:10px;
+cursor:pointer;
+}
+
+/* Result */
+
+#result{
+max-width:800px;
+margin:20px auto;
+padding:20px;
+}
+
+.result-card{
+background:white;
+padding:20px;
+margin-bottom:20px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.result-card h3{
+color:#0d47a1;
+margin-bottom:10px;
+}
+
+.status{
+font-weight:bold;
+margin-top:10px;
+}
+.status-badge{
+display:inline-block;
+padding:8px 14px;
+border-radius:30px;
+font-weight:bold;
+margin-top:10px;
+color:white;
+}
+
+.pending{
+background:#ff9800;
+}
+
+.accepted{
+background:#28a745;
+}
+
+.declined{
+background:#dc3545;
+}
+
+.completed{
+background:#0d47a1;
+}
+
+.request-id{
+background:#f1f5f9;
+padding:8px;
+border-radius:8px;
+font-size:14px;
+margin:10px 0;
+word-break:break-all;
+}
+
+.result-card{
+transition:.3s;
+}
+
+.result-card:hover{
+transform:translateY(-3px);
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+header{
+flex-direction:column;
+gap:10px;
+}
+
+nav{
+flex-wrap:wrap;
+justify-content:center;
+}
+
+.hero h1{
+font-size:30px;
+}
+
+}
