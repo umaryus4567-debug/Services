@@ -402,66 +402,81 @@ document
 .querySelectorAll(".technician-select")
 .forEach(select => {
 
-    select.onchange = async () => {
+select.onchange = async () => {
 
-        const technician =
-        select.value;
+    const technician =
+    select.value;
 
-        const requestId =
-        select.dataset.id;
+    const technicianPhone =
+    select.options[
+        select.selectedIndex
+    ].dataset.phone || "Not Available";
 
-        await updateDoc(
-            doc(
-                db,
-                "service-request",
-                requestId
-            ),
-            {
-                Technician: technician
-            }
-        );
+    const requestId =
+    select.dataset.id;
 
-        const card =
-        select.closest(".request-card");
-
-        const phone =
-        card.querySelector(".whatsapp")
-        .dataset.phone;
-
-        const customerName =
-        card.querySelector(".whatsapp")
-        .dataset.name;
-
-        let formattedPhone =
-        phone.replace(/\D/g, "");
-
-        if(formattedPhone.startsWith("0")){
-
-            formattedPhone =
-            "234" +
-            formattedPhone.substring(1);
+    await updateDoc(
+        doc(
+            db,
+            "service-request",
+            requestId
+        ),
+        {
+            Technician: technician,
+            TechnicianPhone: technicianPhone
         }
+    );
 
-        const message =
+    const card =
+    select.closest(".request-card");
+
+    const phone =
+    card.querySelector(".whatsapp")
+    .dataset.phone;
+
+    const customerName =
+    card.querySelector(".whatsapp")
+    .dataset.name;
+
+    let formattedPhone =
+    phone.replace(/\D/g, "");
+
+    if(
+        formattedPhone.startsWith("0")
+    ){
+        formattedPhone =
+        "234" +
+        formattedPhone.substring(1);
+    }
+
+    const message =
 
 `Hello ${customerName},
 
-Your electrical service request has been assigned to Technician ${technician}.
+✅ Your electrical service request has been assigned.
 
-You will be contacted shortly.
+👨‍🔧 Technician:
+${technician}
 
-Campus Electrical Support Team.`;
+📞 Technician Phone:
+${technicianPhone}
 
-        const whatsappURL =
+The technician will contact you shortly.
 
-`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
+Thank you for choosing UY Power Solutions.
 
-        window.open(
-            whatsappURL,
-            "_blank"
-        );
+UY Power Solutions Support Team`;
 
-    };
+    const whatsappURL =
+
+"https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}";
+
+    window.open(
+        whatsappURL,
+        "_blank"
+    );
+
+};
 
 });
 
