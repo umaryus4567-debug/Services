@@ -14,24 +14,24 @@ addDoc
 from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 async function loadTechnicians(){
 
-    const snapshot =
-    await getDocs(
-        collection(
-            db,
-            "technicians"
-        )
+    const snapshot = await getDocs(
+        collection(db,"technicians")
     );
 
     technicians = [];
 
     snapshot.forEach(doc => {
 
-        technicians.push(
-            doc.data().Name
-        );
+        console.log(doc.data());
+
+        technicians.push({
+            name: doc.data().Name,
+            phone: doc.data().Phone
+        });
 
     });
 
+    console.log("Technicians Array:", technicians);
 }
 
 const container =
@@ -102,6 +102,7 @@ onSnapshot(
     }
 );
 
+console.log("Technicians Array:", technicians);
 /* ==========================
    RENDER REQUESTS
 ========================== */
@@ -144,16 +145,21 @@ Select Technician
 
 ${technicians.map(tech => `
 <option
-value="${tech}"
-${data.Technician === tech ? "selected" : ""}>
-${tech}
+value="${tech.name}"
+data-phone="${tech.phone}"
+${data.Technician === tech.name ? "selected" : ""}>
+${tech.name}
 </option>
 `).join("")}
 
 </select>
 
 <p class="tech-badge">
-👨‍🔧 ${data.Technician || "Not Assigned"}
+👷 ${data.Technician || "Not Assigned"}
+</p>
+
+<p>
+📞 ${data.TechnicianPhone || "No phone assigned"}
 </p>
 
 <p class="status"
@@ -278,93 +284,68 @@ function addButtonEvents(){
         };
     });
     
-document
+     document
 .querySelectorAll(".Archive")
-.forEach(button=>{
+.forEach(button => {
 
-button.onclick = async ()=>{
+    button.onclick = async () => {
 
-const id =
-button.dataset.id;
+        const id = button.dataset.id;
 
-try{
+        try {
 
-const requestRef =
-doc(
-db,
-"service-request",
-id
-);
-
-const requestSnap =
-await getDoc(
-requestRef
-);
-
-if(!requestSnap.exists()){
-
-alert(
-"Request not found"
-);
-
-return;
-}
-
-const requestData =
-requestSnap.data();
-
-await addDoc(
-collection(
-db,
-"service-history"
-),
-requestData
-);
-
-await deleteDoc(
-requestRef
-);
-
-alert(
-"Request archived successfully ✅"
-);
-
-loadRequests();
-
-}catch(error){
-
-console.log(error);
-
-alert(
-"Failed to archive request"
-);
-
-}
-
-};
-
-});
-
-document
-.querySelectorAll(".technician-select")
-.forEach(select => {
-
-    select.onchange = async () => {
-
-        await updateDoc(
+            const requestRef =
             doc(
                 db,
                 "service-request",
-                select.dataset.id
-            ),
-            {
-                Technician: select.value
+                id
+            );
+
+            const requestSnap =
+            await getDoc(requestRef);
+
+            if(!requestSnap.exists()){
+
+                alert(
+                    "Request not found"
+                );
+
+                return;
             }
-        );
+
+            const requestData =
+            requestSnap.data();
+
+            await addDoc(
+                collection(
+                    db,
+                    "service-history"
+                ),
+                requestData
+            );
+
+            await deleteDoc(
+                requestRef
+            );
+
+            alert(
+                "Request archived successfully ✅"
+            );
+
+        } catch(error){
+
+            console.error(error);
+
+            alert(
+                "Failed to archive request"
+            );
+
+        }
 
     };
 
 });
+
 
 document
 .querySelectorAll(".delete")
@@ -402,60 +383,53 @@ document
 .querySelectorAll(".technician-select")
 .forEach(select => {
 
-select.onchange = async () => {
+    select.addEventListener("change", async () => {
 
-    const technician =
-    select.value;
+        const technician = select.value;
 
-    const technicianPhone =
-    select.options[
-        select.selectedIndex
-    ].dataset.phone || "Not Available";
+        if (!technician) return;
 
-    const requestId =
-    select.dataset.id;
+        const technicianPhone =
+            select.options[select.selectedIndex]
+            .getAttribute("data-phone") || "";
 
-    await updateDoc(
-        doc(
-            db,
-            "service-request",
-            requestId
-        ),
-        {
-            Technician: technician,
-            TechnicianPhone: technicianPhone
+        const requestId = select.dataset.id;
+
+        console.log("Technician:", technician);
+        console.log("Phone:", technicianPhone);
+
+        await updateDoc(
+            doc(db, "service-request", requestId),
+            {
+                Technician: technician,
+                TechnicianPhone: technicianPhone,
+                Status: "Accepted"
+            }
+        );
+
+        const card =
+            select.closest(".request-card");
+
+        const customerPhone =
+            card.querySelector(".whatsapp").dataset.phone;
+
+        const customerName =
+            card.querySelector(".whatsapp").dataset.name;
+
+        let formattedPhone =
+            customerPhone.replace(/\D/g, "");
+
+        if(formattedPhone.startsWith("0")){
+            formattedPhone =
+                "234" + formattedPhone.substring(1);
         }
-    );
 
-    const card =
-    select.closest(".request-card");
-
-    const phone =
-    card.querySelector(".whatsapp")
-    .dataset.phone;
-
-    const customerName =
-    card.querySelector(".whatsapp")
-    .dataset.name;
-
-    let formattedPhone =
-    phone.replace(/\D/g, "");
-
-    if(
-        formattedPhone.startsWith("0")
-    ){
-        formattedPhone =
-        "234" +
-        formattedPhone.substring(1);
-    }
-
-    const message =
-
+        const message =
 `Hello ${customerName},
 
 ✅ Your electrical service request has been assigned.
 
-👨‍🔧 Technician:
+👷 Technician:
 ${technician}
 
 📞 Technician Phone:
@@ -467,18 +441,14 @@ Thank you for choosing UY Power Solutions.
 
 UY Power Solutions Support Team`;
 
-   const whatsappURL =
-`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
+        window.open(
+            `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`,
+            "_blank"
+        );
 
-    window.open(
-        whatsappURL,
-        "_blank"
-    );
-
-};
+    });
 
 });
-
 document
 .querySelectorAll(".whatsapp")
 .forEach(btn => {
