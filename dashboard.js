@@ -467,9 +467,8 @@ Thank you for choosing UY Power Solutions.
 
 UY Power Solutions Support Team`;
 
-    const whatsappURL =
-
-"https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}";
+   const whatsappURL =
+`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
 
     window.open(
         whatsappURL,
