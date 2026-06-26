@@ -22,20 +22,20 @@
 
         <div class="Name">
             <label>
-                Name 🫥
+                Name:
                 <input type="text" id="customerName" placeholder="Name" required>
             </label>
         </div>
 
         <div class="Name">
             <label>
-                Phone No
+                Phone No:
                 <input type="tel" id="phone" placeholder="Phone Number" required>
             </label>
         </div>
 
         <div class="Name">
-            <label>Location</label>
+            <label>Location:</label>
 
             <select id="location" name="location" required>
                 <option value="">Select Location</option>
@@ -48,28 +48,28 @@
 
         <div class="Name">
             <label>
-                Area
+                Area:
                 <input type="text" id="area" placeholder="Area">
             </label>
         </div>
 
         <div class="Name">
             <label>
-                Local Bus Stop 🚏
+                Local Bus Stop:
                 <input type="text" id="busStop" placeholder="Bus Stop">
             </label>
         </div>
 
         <div class="Name">
             <label>
-                Residential Address
+                Residential Address:
                 <input type="text" id="address" placeholder="Residential Address">
             </label>
         </div>
 
         <div class="Name">
             <label>
-                Description
+                Description:
 
                 <textarea
                     id="description"
@@ -90,21 +90,21 @@
     <div class="checkbox">
         <label>
             <input type="radio" name="urgency" value="Low">
-            Low 🤏
+            Low <ion-icon name="bulb"></ion-icon>
         </label>
     </div>
 
     <div class="checkbox">
         <label>
             <input type="radio" name="urgency" value="Medium">
-            Medium ⚡
+            Medium  <ion-icon name="flash"></ion-icon>
         </label>
     </div>
 
     <div class="checkbox">
         <label>
             <input type="radio" name="urgency" value="High">
-            High 💥
+            High <ion-icon name="warning"></ion-icon>
         </label>
     </div>
 
@@ -113,19 +113,22 @@
         </div>
 
         <button type="submit">
-            Submit Request ✅
+            Submit Request
+
         </button>
         <p id="successMessage"></p>
 
     </form>
   <a href="index.html">
-        <button>
-            Exit👈
+    <button>
+      EXIT
+        <ion-icon name="exit-outline" size="medium"></ion-icon>
         </button>
                 </a>
 </section>
 
-
+<script type="module" src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js"></script>
 <script type="module" src="request.js"></script>
 
 </body>

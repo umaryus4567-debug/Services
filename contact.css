@@ -19,6 +19,9 @@ header{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    position:sticky;
+    top:0;
+    z-index:1000;
 }
 
 .logo{
@@ -36,6 +39,27 @@ nav a{
     color:white;
     text-decoration:none;
     font-weight:500;
+    border-radius: 10px;
+    padding: 8px 12px;
+    border-bottom: 3px solid gold;
+    background: rgba(0, 0, 0, 0.1);
+}
+nav a.active{
+  border-bottom: 3px solid white;
+  border-left: 3px solid white;
+  border-right: 3px solid white;
+  
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+animation: slide 1s;
+}
+@keyframes slide{
+  0%{
+    background: rgba(0, 0, 0, 1);
+  }
+     100%{
+    background:gold;
+  }
 }
 
 nav a:hover{
@@ -128,25 +152,49 @@ nav a:hover{
     color:white;
     border-radius:8px;
     font-weight:bold;
-}
-
-.whatsapp{
-    background:#25D366;
-}
-
-.call{
-    background:#ff9800;
     margin-right: 20px;
 }
-
+.whatsapp{
+  background:#25D366;
+}
+.call{
+  background:#ff9800;
+}
 .login{
     background:#0a2f5c;
 }
-.index{
-  background: white ;
-  color: #999;
-  margin-left: 20px;
+.emergency a.btn-call{
+  padding:12px 18px;
+    text-decoration:none;
+    color:white;
+    border-radius:8px;
+    font-weight:bold;
+    margin-right: 20px;
+  margin-right: 20px;
+  background:#ff9800;
 }
+.emergency a.btn-whatsapp{
+  padding:12px 18px;
+    text-decoration:none;
+    color:white;
+    border-radius:8px;
+    font-weight:bold;
+    margin-right: 20px;
+  margin-right: 20px;
+background:#25D366;
+}
+
+.emergency a.btn-index{
+  padding:12px 18px;
+    text-decoration:none;
+    color:#999;
+    border-radius:8px;
+    font-weight:bold;
+    margin-right: 20px;
+  margin-right: 20px;
+  background:white;
+}
+
 
 .btn:hover{
     opacity:0.9;

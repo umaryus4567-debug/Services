@@ -33,11 +33,33 @@ nav ul{
     gap:20px;
 }
 
-nav a{
-    color:white;
-    text-decoration:none;
-    font-weight:500;
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: 0.3s ease;
+    position:relative;
+    border-bottom: 3px solid gold;
+    background: rgba(0, 0, 0, 0.1);
 }
+nav a.active{
+  border-bottom: 3px solid white;
+  border-left: 3px solid white;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+animation: slide 1s ;
+}
+@keyframes slide{
+  0%{
+    background: rgba(0, 0, 0, 0.9);
+  }
+     100%{
+    background: gold;
+  }
+}
+
 
 nav a:hover{
     color:#ffd54f;

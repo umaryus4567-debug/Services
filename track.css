@@ -20,6 +20,7 @@ padding:15px 8%;
 display:flex;
 justify-content:space-between;
 align-items:center;
+
 }
 
      .logo{
@@ -34,8 +35,13 @@ gap:20px;
 }
 
 nav a{
-color:white;
-text-decoration:none;
+    color:white;
+    text-decoration:none;
+    font-weight:500;
+    border-radius: 10px;
+    padding: 8px 12px;
+    border-bottom: 3px solid gold;
+    background: rgba(0, 0, 0, 0.1);
 }
 
 /* Hero */

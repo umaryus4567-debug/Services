@@ -19,6 +19,9 @@ header{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    position:sticky;
+    top:0;
+    z-index:1000;
 }
 
 .logo{
@@ -32,12 +35,19 @@ nav ul{
     list-style:none;
     gap:20px;
 }
-
-nav a{
-    text-decoration:none;
-    color:white;
-    font-weight:500;
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: 0.3s ease;
+    position:relative;
+    border-bottom: 3px solid gold;
+    background: rgba(0, 0, 0, 0.1);
 }
+
+
 
 nav a:hover{
     color:#ffd54f;
