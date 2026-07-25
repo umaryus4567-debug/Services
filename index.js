@@ -4,7 +4,7 @@ import {
     loadUser,
     logoutUser
 } from "./auth-utils.js";
-console.log("Index.js started");
+
 import {
     listenForNotifications,
     markAllNotificationsAsRead
@@ -13,20 +13,20 @@ import {
 import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-import { auth } from "./auth-utils.js";
-import {
-    onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+console.log("Index.js started");
 
 onAuthStateChanged(auth, (user) => {
 
     if (!user) {
 
         window.location.href = "register.html";
+        return;
 
     }
 
 });
+
 
 console.log("Index JS Loaded Successfully");
 
