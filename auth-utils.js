@@ -419,11 +419,12 @@ PROTECT PAGE
 
 export function protectPage() {
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
 
         if (!user) {
 
-            window.location.href = "login.html";
+            window.location.href = "register.html";
+            return;
 
         }
 
