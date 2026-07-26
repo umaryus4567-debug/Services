@@ -205,7 +205,53 @@ footer{
     text-align:center;
     padding:20px;
 }
+/*==================================
+PAGE LOADER
+==================================*/
 
+.page-loader{
+
+ position:fixed;
+
+ inset:0;
+
+ background:#ffffff;
+
+ display:flex;
+
+ justify-content:center;
+
+ align-items:center;
+
+ z-index:99999;
+
+}
+
+.loader{
+
+ width:55px;
+
+ height:55px;
+
+ border:5px solid #e5e7eb;
+
+ border-top:5px solid #2563eb;
+
+ border-radius:50%;
+
+ animation:spin 1s linear infinite;
+
+}
+
+@keyframes spin{
+
+ to{
+
+ transform:rotate(360deg);
+
+ }
+
+}
 /* Mobile */
 
 @media(max-width:768px){
