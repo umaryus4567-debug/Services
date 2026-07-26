@@ -1,26 +1,17 @@
-/*==================================================
-UY POWER SOLUTIONS
-AUTH UTILITIES
-==================================================*/
-
-import { app } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
 
 import {
-    getAuth,
-    signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
     GoogleAuthProvider,
     signInWithPopup,
-    sendPasswordResetEmail,
     signOut,
+    sendPasswordResetEmail,
     updateProfile,
-    onAuthStateChanged,
-    browserLocalPersistence,
-    setPersistence
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
 import {
-    getFirestore,
     doc,
     setDoc,
     getDoc,
@@ -28,52 +19,13 @@ import {
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-const auth = getAuth(app);
-const db = getFirestore(app);
-
 const googleProvider = new GoogleAuthProvider();
 
 googleProvider.setCustomParameters({
     prompt: "select_account"
 });
 
-export { auth, db };
-/*==================================================
-AUTHENTICATION FUNCTIONS
-==================================================*/
-
-/*
-==================================
-LOGIN USER
-==================================
-*/
-
-export async function loginUser(email, password) {
-
-    await setPersistence(
-        auth,
-        browserLocalPersistence
-    );
-
-    return await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-    );
-
-}
-
-/*
-==================================
-REGISTER USER
-==================================
-*/
-
-export async function registerUser(
-    fullName,
-    email,
-    password
-) {
+export async function registerUser(fullName, email, password, phone) {
 
     const userCredential =
         await createUserWithEmailAndPassword(
@@ -82,52 +34,124 @@ export async function registerUser(
             password
         );
 
-    await updateProfile(
-        userCredential.user,
-        {
-            displayName: fullName
-        }
-    );
+    const user = userCredential.user;
 
-    return userCredential;
+    await updateProfile(user, {
+        displayName: fullName
+    });
+
+    await setDoc(doc(db, "users", user.uid), {
+
+        uid: user.uid,
+
+        fullName,
+
+        email,
+
+        phone,
+
+        role: "customer",
+
+        provider: "email",
+
+        photoURL: user.photoURL || "",
+
+        createdAt: serverTimestamp(),
+
+        lastLogin: serverTimestamp()
+
+    });
+
+    return user;
 
 }
 
-/*
-==================================
-GOOGLE LOGIN
-==================================
-*/
+export async function loginUser(email, password) {
+
+    const userCredential =
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+    const user = userCredential.user;
+
+    await updateDoc(
+        doc(db, "users", user.uid),
+        {
+            lastLogin: serverTimestamp()
+        }
+    );
+
+    return user;
+
+}
 
 export async function googleLogin() {
 
-    return await signInWithPopup(
+    const result = await signInWithPopup(
         auth,
         googleProvider
     );
 
+    const user = result.user;
+
+    const userRef = doc(db, "users", user.uid);
+
+    const snapshot = await getDoc(userRef);
+
+    if (!snapshot.exists()) {
+
+        await setDoc(userRef, {
+
+            uid: user.uid,
+
+            fullName: user.displayName || "Customer",
+
+            email: user.email,
+
+            phone: "",
+
+            role: "customer",
+
+            provider: "google",
+
+            photoURL: user.photoURL || "",
+
+            createdAt: serverTimestamp(),
+
+            lastLogin: serverTimestamp()
+
+        });
+
+    } else {
+
+        await updateDoc(userRef, {
+
+            lastLogin: serverTimestamp()
+
+        });
+
+    }
+
+    return user;
+
 }
 
-/*
-==================================
+/*==================================
 RESET PASSWORD
-==================================
-*/
+==================================*/
 
 export async function resetPassword(email) {
 
-    return await sendPasswordResetEmail(
-        auth,
-        email
-    );
+    return await sendPasswordResetEmail(auth, email);
 
 }
 
-/*
-==================================
-LOGOUT USER
-==================================
-*/
+/*==================================
+LOGOUT
+==================================*/
 
 export async function logoutUser() {
 
@@ -135,205 +159,69 @@ export async function logoutUser() {
 
 }
 
-/*
-==================================
+/*==================================
 CURRENT USER
-==================================
-*/
+==================================*/
 
 export function getCurrentUser() {
 
     return auth.currentUser;
 
 }
-/*==================================================
-FIRESTORE USER MANAGER
-==================================================*/
 
-/*
-==================================
-SAVE USER PROFILE
-==================================
-*/
+/*==================================
+AUTH LISTENER
+==================================*/
 
-export async function saveUserProfile(user, data = {}) {
+export function authListener(callback) {
 
-    await setDoc(
+    onAuthStateChanged(auth, callback);
 
-        doc(db, "users", user.uid),
+}
 
-        {
-            uid: user.uid,
+/*==================================
+PROTECT PAGE
+==================================*/
 
-            fullName:
-                data.fullName ||
-                user.displayName ||
-                "Customer",
+export function protectPage() {
 
-            email: user.email,
+    onAuthStateChanged(auth, (user) => {
 
-            phone:
-                data.phone || "",
+        console.log("Protect Check:", user);
 
-            role:
-                data.role || "customer",
+        if (!user) {
 
-            provider:
-                data.provider || "email",
+            window.location.replace("login.html");
 
-            photoURL:
-                user.photoURL || "",
-
-            status: "active",
-
-            emailVerified:
-                user.emailVerified,
-
-            createdAt:
-                serverTimestamp(),
-
-            lastLogin:
-                serverTimestamp()
-
-        },
-
-        {
-            merge: true
         }
-
-    );
-
-}
-
-/*
-==================================
-GET USER PROFILE
-==================================
-*/
-
-export async function getUserProfile(uid) {
-
-    const snapshot = await getDoc(
-
-        doc(db, "users", uid)
-
-    );
-
-    if (snapshot.exists()) {
-
-        return snapshot.data();
-
-    }
-
-    return null;
-
-}
-
-/*
-==================================
-UPDATE USER PROFILE
-==================================
-*/
-
-export async function updateUserProfile(uid, data) {
-
-    await updateDoc(
-
-        doc(db, "users", uid),
-
-        data
-
-    );
-
-}
-
-/*
-==================================
-UPDATE LAST LOGIN
-==================================
-*/
-
-export async function updateLastLogin(uid) {
-
-    await updateDoc(
-
-        doc(db, "users", uid),
-
-        {
-            lastLogin: serverTimestamp()
-        }
-
-    );
-
-}
-
-/*
-==================================
-GET USER ROLE
-==================================
-*/
-
-export async function getUserRole(uid) {
-
-    const profile =
-        await getUserProfile(uid);
-
-    if (!profile) {
-
-        return "customer";
-
-    }
-
-    return profile.role;
-
-}
-
-/*
-==================================
-CREATE CUSTOMER
-==================================
-*/
-
-export async function createCustomer(user, phone = "") {
-
-    await saveUserProfile(user, {
-
-        phone,
-
-        role: "customer",
-
-        provider: "email"
 
     });
 
 }
 
-/*
-==================================
-CREATE GOOGLE CUSTOMER
-==================================
-*/
+/*==================================
+GUEST ONLY
+==================================*/
 
-export async function createGoogleCustomer(user) {
+export function guestOnly() {
 
-    await saveUserProfile(user, {
+    onAuthStateChanged(auth, (user) => {
 
-        role: "customer",
+        console.log("Guest Check:", user);
 
-        provider: "google"
+        if (user) {
+
+            window.location.replace("home.html");
+
+        }
 
     });
 
 }
-/*==================================================
-ROUTE PROTECTION & SESSION MANAGER
-==================================================*/
 
-/*
-==================================
-LOAD USER DETAILS
-==================================
-*/
+/*==================================
+LOAD USER
+==================================*/
 
 export function loadUser() {
 
@@ -341,14 +229,9 @@ export function loadUser() {
 
         if (!user) return;
 
-        const userName =
-        document.getElementById("userName");
-
-        const userEmail =
-        document.getElementById("userEmail");
-
-        const userImage =
-        document.getElementById("userImage");
+        const userName = document.getElementById("userName");
+        const userEmail = document.getElementById("userEmail");
+        const userImage = document.getElementById("userImage");
 
         if (userName) {
 
@@ -367,7 +250,7 @@ export function loadUser() {
         if (userImage) {
 
             userImage.src =
-                user.photoURL || "images/default-user.png";
+                user.photoURL || "default-user.png";
 
         }
 
@@ -375,196 +258,8 @@ export function loadUser() {
 
 }
 
-/*
-==================================
-MONITOR SESSION
-==================================
-*/
-
-export function monitorSession(callback = null) {
-
-    onAuthStateChanged(auth, async (user) => {
-
-        if (user) {
-
-            try {
-
-                await updateLastLogin(user.uid);
-
-            }
-
-            catch (error) {
-
-                console.error(error);
-
-            }
-
-            if (callback) {
-
-                callback(user);
-
-            }
-
-        }
-
-    });
-
-}
-
-/*
-==================================
-PROTECT PAGE
-==================================
-*/
-
-export function protectPage() {
-
-    onAuthStateChanged(auth, async (user) => {
-
-        if (!user) {
-
-            window.location.href = "register.html";
-            return;
-
-        }
-
-    });
-
-}
-
-/*
-==================================
-GUEST ONLY
-==================================
-*/
-
-export function guestOnly() {
-
-    onAuthStateChanged(auth, (user) => {
-
-        if (user) {
-
-            window.location.href = "index.html";
-
-        }
-
-    });
-
-}
-
-/*
-==================================
-ADMIN ONLY
-==================================
-*/
-
-export async function adminOnly() {
-
-    onAuthStateChanged(auth, async (user) => {
-
-        if (!user) {
-
-            window.location.href = "login.html";
-
-            return;
-
-        }
-
-        const role =
-        await getUserRole(user.uid);
-
-        if (role !== "admin") {
-
-            window.location.href = "index.html";
-
-        }
-
-    });
-
-}
-
-/*
-==================================
-TECHNICIAN ONLY
-==================================
-*/
-
-export async function technicianOnly() {
-
-    onAuthStateChanged(auth, async (user) => {
-
-        if (!user) {
-
-            window.location.href = "login.html";
-
-            return;
-
-        }
-
-        const role =
-        await getUserRole(user.uid);
-
-        if (role !== "technician") {
-
-            window.location.href = "index.html";
-
-        }
-
-    });
-
-}
-
-/*
-==================================
-CUSTOMER ONLY
-==================================
-*/
-export {
-    auth
-};
-export async function customerOnly() {
-
-    onAuthStateChanged(auth, async (user) => {
-
-        if (!user) {
-
-            window.location.href = "login.html";
-
-            return;
-
-        }
-
-        const role =
-        await getUserRole(user.uid);
-
-        if (role !== "customer") {
-
-            window.location.href = "index.html";
-
-        }
-
-    });
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*==================================
+EXPORT AUTH
+==================================*/
+
+export { auth };

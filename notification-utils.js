@@ -1,5 +1,6 @@
+import { db } from "./firebase-config.js";
+
 import {
-    getFirestore,
     collection,
     addDoc,
     query,
@@ -9,71 +10,43 @@ import {
     updateDoc,
     doc,
     serverTimestamp,
-    getDocs
+    getDocs,
+    deleteDoc
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+export async function createNotification(data) {
 
-import { app } from "./firebase-config.js";
+    await addDoc(
+        collection(db, "notifications"),
+        {
 
-const db = getFirestore(app);
+            uid: data.uid,
 
-/*
-====================================
-CREATE NOTIFICATION
-====================================
-*/
+            title: data.title,
 
-export async function createNotification({
+            message: data.message,
 
-    uid,
-    title,
-    message,
-    type = "info",
-    icon = "fa-circle-info",
-    sender = "system",
-    link = "index.html"
+            type: data.type || "info",
 
-}) {
+            icon: data.icon || "fa-bell",
 
-    try {
+            sender: data.sender || "system",
 
-        await addDoc(collection(db, "notifications"), {
+            link: data.link || "",
 
-            uid,
-            title,
-            message,
-            type,
-            icon,
-            sender,
-            link,
             read: false,
+
             createdAt: serverTimestamp()
 
-        });
-
-    } catch (error) {
-
-        console.error("Notification Error:", error);
-
-    }
+        }
+    );
 
 }
-
-/*
-====================================
-LISTEN FOR NOTIFICATIONS
-====================================
-*/
-
 export function listenForNotifications(uid, callback) {
 
     const q = query(
-
         collection(db, "notifications"),
-
         where("uid", "==", uid),
-
         orderBy("createdAt", "desc")
-
     );
 
     return onSnapshot(q, (snapshot) => {
@@ -97,41 +70,66 @@ export function listenForNotifications(uid, callback) {
     });
 
 }
-
-/*
-====================================
-MARK ALL AS READ
-====================================
-*/
-
 export async function markAllNotificationsAsRead(uid) {
 
     const q = query(
-
         collection(db, "notifications"),
-
         where("uid", "==", uid),
-
         where("read", "==", false)
-
     );
 
     const snapshot = await getDocs(q);
 
-    for (const notification of snapshot.docs) {
+    const promises = [];
 
-        await updateDoc(
+    snapshot.forEach((document) => {
 
-            doc(db, "notifications", notification.id),
+        promises.push(
 
-            {
+            updateDoc(doc(db, "notifications", document.id), {
 
                 read: true
 
-            }
+            })
 
         );
 
-    }
+    });
+
+    await Promise.all(promises);
+
+}
+
+export async function deleteNotification(notificationId) {
+
+    await deleteDoc(
+        doc(db, "notifications", notificationId)
+    );
+
+}
+export async function clearAllNotifications(uid) {
+
+    const q = query(
+        collection(db, "notifications"),
+        where("uid", "==", uid)
+    );
+
+    const snapshot = await getDocs(q);
+
+    const promises = [];
+
+    snapshot.forEach((document) => {
+
+        promises.push(
+
+            deleteDoc(
+                doc(db, "notifications", document.id)
+            )
+
+        );
+
+    });
+
+    await Promise.all(promises);
 
 }

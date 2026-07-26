@@ -1,36 +1,23 @@
 /*==================================================
 UY POWER SOLUTIONS
-REGISTER SYSTEM
-Part 1
-Imports & DOM Setup
+REGISTRATION
 ==================================================*/
 
 import {
-    auth,
-    
     guestOnly,
-
     registerUser,
-
-    googleLogin,
-
-    createCustomer,
-
-    createGoogleCustomer
-
+    googleLogin
 } from "./auth-utils.js";
 
 import {
-
     createNotification
-
 } from "./notification-utils.js";
 
 /*==================================
 GUEST ONLY
 ==================================*/
 
-guestOnly();
+//guestOnly();//
 
 /*==================================
 DOM ELEMENTS
@@ -90,23 +77,18 @@ document.getElementById("toastIcon");
 const successModal =
 document.getElementById("successModal");
 
-const continueButton =
-document.getElementById("continueButton");
-
-console.log("Register.js Loaded Successfully");
+console.log("Registration Page Loaded");
 
 /*==================================================
-UY POWER SOLUTIONS
-REGISTER SYSTEM
-Part 2
-UI Functions
+PART 2
+UI FUNCTIONS
 ==================================================*/
 
 /*==================================
 SHOW LOADING
 ==================================*/
 
-function showLoading(){
+function showLoading() {
 
     loadingScreen.style.display = "flex";
 
@@ -124,7 +106,7 @@ function showLoading(){
 HIDE LOADING
 ==================================*/
 
-function hideLoading(){
+function hideLoading() {
 
     loadingScreen.style.display = "none";
 
@@ -139,40 +121,34 @@ function hideLoading(){
 }
 
 /*==================================
-SHOW TOAST
+TOAST
 ==================================*/
 
-function showToast(message,type="success"){
+function showToast(message, type = "success") {
 
     toastMessage.textContent = message;
 
     toast.classList.add("show");
 
-    if(type==="success"){
+    if (type === "success") {
 
-        toast.style.borderLeft =
-        "6px solid #22c55e";
+        toast.style.borderLeft = "6px solid #22c55e";
 
-        toastIcon.className =
-        "fa-solid fa-circle-check";
+        toastIcon.className = "fa-solid fa-circle-check";
 
-    }
+    } else {
 
-    else{
+        toast.style.borderLeft = "6px solid #ef4444";
 
-        toast.style.borderLeft =
-        "6px solid #ef4444";
-
-        toastIcon.className =
-        "fa-solid fa-circle-xmark";
+        toastIcon.className = "fa-solid fa-circle-xmark";
 
     }
 
-    setTimeout(()=>{
+    setTimeout(() => {
 
         toast.classList.remove("show");
 
-    },3500);
+    }, 3000);
 
 }
 
@@ -180,19 +156,9 @@ function showToast(message,type="success"){
 SUCCESS MODAL
 ==================================*/
 
-function showSuccessModal(){
+function showSuccessModal() {
 
     successModal.style.display = "flex";
-
-}
-
-if(continueButton){
-
-    continueButton.addEventListener("click",()=>{
-
-        window.location.href = "index.html";
-
-    });
 
 }
 
@@ -200,101 +166,44 @@ if(continueButton){
 PASSWORD TOGGLE
 ==================================*/
 
-function toggleVisibility(input,button){
+function toggleVisibility(input, button) {
 
     const icon = button.querySelector("i");
 
-    if(input.type==="password"){
+    if (input.type === "password") {
 
-        input.type="text";
+        input.type = "text";
 
-        icon.classList.replace(
+        icon.classList.replace("fa-eye", "fa-eye-slash");
 
-            "fa-eye",
+    } else {
 
-            "fa-eye-slash"
+        input.type = "password";
 
-        );
-
-    }
-
-    else{
-
-        input.type="password";
-
-        icon.classList.replace(
-
-            "fa-eye-slash",
-
-            "fa-eye"
-
-        );
+        icon.classList.replace("fa-eye-slash", "fa-eye");
 
     }
 
 }
 
-togglePassword.addEventListener("click",()=>{
+togglePassword.addEventListener("click", () => {
 
-    toggleVisibility(
-
-        password,
-
-        togglePassword
-
-    );
+    toggleVisibility(password, togglePassword);
 
 });
 
-toggleConfirmPassword.addEventListener("click",()=>{
+toggleConfirmPassword.addEventListener("click", () => {
 
-    toggleVisibility(
-
-        confirmPassword,
-
-        toggleConfirmPassword
-
-    );
+    toggleVisibility(confirmPassword, toggleConfirmPassword);
 
 });
-
-/*==================================
-INPUT ANIMATION
-==================================*/
-
-document
-.querySelectorAll(".input-wrapper input")
-.forEach(input=>{
-
-    input.addEventListener("focus",()=>{
-
-        input.parentElement.style.transform =
-        "translateY(-2px)";
-
-    });
-
-    input.addEventListener("blur",()=>{
-
-        input.parentElement.style.transform =
-        "translateY(0)";
-
-    });
-
-});
-
 
 /*==================================================
-UY POWER SOLUTIONS
-REGISTER SYSTEM
-Part 3
-Validation
+PART 3
+VALIDATION
 ==================================================*/
 
-/*==================================
-EMAIL VALIDATION
-==================================*/
-
-function validateEmail(email){
+function validateEmail(email) {
 
     const pattern =
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -303,21 +212,13 @@ function validateEmail(email){
 
 }
 
-/*==================================
-PHONE VALIDATION
-==================================*/
-
-function validatePhone(phone){
+function validatePhone(phone) {
 
     return /^[0-9]{11}$/.test(phone.trim());
 
 }
 
-/*==================================
-SHOW INPUT ERROR
-==================================*/
-
-function markInvalid(input){
+function markInvalid(input) {
 
     input.style.borderColor = "#ef4444";
 
@@ -325,13 +226,9 @@ function markInvalid(input){
 
 }
 
-/*==================================
-CLEAR ERRORS
-==================================*/
+function clearErrors() {
 
-function clearErrors(){
-
-    document.querySelectorAll("input").forEach(input=>{
+    document.querySelectorAll("input").forEach(input => {
 
         input.style.borderColor = "#e2e8f0";
 
@@ -339,22 +236,15 @@ function clearErrors(){
 
 }
 
-/*==================================
-VALIDATE FORM
-==================================*/
-
-function validateForm(){
+function validateForm() {
 
     clearErrors();
 
-    if(fullName.value.trim().length < 3){
+    if (fullName.value.trim().length < 3) {
 
         showToast(
-
             "Full name must contain at least 3 characters.",
-
             "error"
-
         );
 
         markInvalid(fullName);
@@ -363,14 +253,11 @@ function validateForm(){
 
     }
 
-    if(!validateEmail(email.value)){
+    if (!validateEmail(email.value)) {
 
         showToast(
-
             "Please enter a valid email address.",
-
             "error"
-
         );
 
         markInvalid(email);
@@ -379,14 +266,11 @@ function validateForm(){
 
     }
 
-    if(!validatePhone(phone.value)){
+    if (!validatePhone(phone.value)) {
 
         showToast(
-
             "Phone number must contain exactly 11 digits.",
-
             "error"
-
         );
 
         markInvalid(phone);
@@ -395,14 +279,11 @@ function validateForm(){
 
     }
 
-    if(password.value.length < 6){
+    if (password.value.length < 6) {
 
         showToast(
-
             "Password must be at least 6 characters.",
-
             "error"
-
         );
 
         markInvalid(password);
@@ -411,14 +292,11 @@ function validateForm(){
 
     }
 
-    if(password.value !== confirmPassword.value){
+    if (password.value !== confirmPassword.value) {
 
         showToast(
-
             "Passwords do not match.",
-
             "error"
-
         );
 
         markInvalid(confirmPassword);
@@ -427,14 +305,11 @@ function validateForm(){
 
     }
 
-    if(!agreeTerms.checked){
+    if (!agreeTerms.checked) {
 
         showToast(
-
             "Please agree to the Terms & Conditions.",
-
             "error"
-
         );
 
         return false;
@@ -446,37 +321,27 @@ function validateForm(){
 }
 
 /*==================================================
-UY POWER SOLUTIONS
-REGISTER SYSTEM
-Part 4
-Email Registration
+PART 4
+REGISTER USER
 ==================================================*/
 
 registerForm.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
-    if(!validateForm()) return;
+    if (!validateForm()) return;
 
     showLoading();
 
-    try{
+    try {
 
-        const userCredential = await registerUser(
+        const user = await registerUser(
 
             fullName.value.trim(),
 
             email.value.trim().toLowerCase(),
 
-            password.value.trim()
-
-        );
-
-        const user = userCredential.user;
-
-        await createCustomer(
-
-            user,
+            password.value.trim(),
 
             phone.value.trim()
 
@@ -488,7 +353,7 @@ registerForm.addEventListener("submit", async (e) => {
 
             title: "Welcome to UY Power Solutions",
 
-            message: "Your account has been created successfully. We're glad to have you with us.",
+            message: "Your account has been created successfully. Welcome aboard!",
 
             type: "success",
 
@@ -496,41 +361,37 @@ registerForm.addEventListener("submit", async (e) => {
 
             sender: "system",
 
-            link: "index.html"
+            link: "home.html"
 
         });
 
         hideLoading();
 
-        showToast(
-
-            "Account created successfully."
-
-        );
-
-        registerForm.reset();
+        showToast("Account created successfully!");
 
         showSuccessModal();
 
+        registerForm.reset();
+
+        setTimeout(() => {
+
+            window.location.href = "login.html";
+
+        }, 2000);
+
     }
 
-    catch(error){
+    catch (error) {
 
         hideLoading();
 
         console.error(error);
 
-        switch(error.code){
+        switch (error.code) {
 
             case "auth/email-already-in-use":
 
-                showToast(
-
-                    "This email is already registered.",
-
-                    "error"
-
-                );
+                showToast("This email is already registered.", "error");
 
                 markInvalid(email);
 
@@ -538,13 +399,7 @@ registerForm.addEventListener("submit", async (e) => {
 
             case "auth/invalid-email":
 
-                showToast(
-
-                    "Invalid email address.",
-
-                    "error"
-
-                );
+                showToast("Invalid email address.", "error");
 
                 markInvalid(email);
 
@@ -552,13 +407,7 @@ registerForm.addEventListener("submit", async (e) => {
 
             case "auth/weak-password":
 
-                showToast(
-
-                    "Password is too weak.",
-
-                    "error"
-
-                );
+                showToast("Password is too weak.", "error");
 
                 markInvalid(password);
 
@@ -566,25 +415,13 @@ registerForm.addEventListener("submit", async (e) => {
 
             case "auth/network-request-failed":
 
-                showToast(
-
-                    "Please check your internet connection.",
-
-                    "error"
-
-                );
+                showToast("Please check your internet connection.", "error");
 
                 break;
 
             default:
 
-                showToast(
-
-                    error.message,
-
-                    "error"
-
-                );
+                showToast(error.message, "error");
 
         }
 
@@ -593,23 +430,17 @@ registerForm.addEventListener("submit", async (e) => {
 });
 
 /*==================================================
-UY POWER SOLUTIONS
-REGISTER SYSTEM
-Part 5
-Google Registration
+PART 5
+GOOGLE REGISTRATION
 ==================================================*/
 
 googleRegister.addEventListener("click", async () => {
 
     showLoading();
 
-    try{
+    try {
 
-        const result = await googleLogin();
-
-        const user = result.user;
-
-        await createGoogleCustomer(user);
+        const user = await googleLogin();
 
         await createNotification({
 
@@ -617,7 +448,7 @@ googleRegister.addEventListener("click", async () => {
 
             title: "Google Registration",
 
-            message: "Your Google account has been registered successfully.",
+            message: "Your Google account has been linked successfully.",
 
             type: "success",
 
@@ -625,37 +456,34 @@ googleRegister.addEventListener("click", async () => {
 
             sender: "system",
 
-            link: "index.html"
+            link: "home.html"
 
         });
 
         hideLoading();
 
-        showToast(
-            "Google registration successful."
-        );
+        showToast("Google registration successful!");
 
         setTimeout(() => {
 
-            window.location.href =
-            "index.html";
+            window.location.href = "home.html";
 
-        }, 1200);
+        }, 1500);
 
     }
 
-    catch(error){
+    catch (error) {
 
         hideLoading();
 
         console.error(error);
 
-        switch(error.code){
+        switch (error.code) {
 
             case "auth/popup-closed-by-user":
 
                 showToast(
-                    "Google sign in was cancelled.",
+                    "Google sign-in was cancelled.",
                     "error"
                 );
 
@@ -664,7 +492,7 @@ googleRegister.addEventListener("click", async () => {
             case "auth/popup-blocked":
 
                 showToast(
-                    "Popup was blocked by your browser.",
+                    "Your browser blocked the popup.",
                     "error"
                 );
 
@@ -689,89 +517,5 @@ googleRegister.addEventListener("click", async () => {
         }
 
     }
-
-});
-
-/*==================================================
-UY POWER SOLUTIONS
-REGISTER SYSTEM
-Part 6
-Startup & Final Setup
-==================================================*/
-
-/*==================================
-AUTH STATE
-==================================*/
-
-import {
-
-    auth
-
-} from "./auth-utils.js";
-
-import {
-
-    onAuthStateChanged
-
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-
-onAuthStateChanged(auth,(user)=>{
-
-    if(user){
-
-        console.log(
-            "Logged in as:",
-            user.email
-        );
-
-    }
-
-    else{
-
-        console.log(
-            "No active user."
-        );
-
-    }
-
-});
-
-/*==================================
-PRESS ENTER
-==================================*/
-
-document.addEventListener("keydown",(e)=>{
-
-    if(
-
-        e.key==="Enter" &&
-
-        document.activeElement.tagName==="INPUT"
-
-    ){
-
-        registerForm.requestSubmit();
-
-    }
-
-});
-
-/*==================================
-STARTUP MESSAGE
-==================================*/
-
-window.addEventListener("load",()=>{
-
-    console.log("====================================");
-
-    console.log("UY POWER SOLUTIONS");
-
-    console.log("Register System Ready");
-
-    console.log("Firebase Connected");
-
-    console.log("Google Authentication Ready");
-
-    console.log("====================================");
 
 });

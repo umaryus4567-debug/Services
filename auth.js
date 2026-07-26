@@ -1,15 +1,13 @@
 /*==================================================
 UY POWER SOLUTIONS
-LOGIN SYSTEM
-Part 1
-Imports & DOM Setup
+LOGIN
 ==================================================*/
 
 import {
-    auth,
+    guestOnly,
     loginUser,
     googleLogin,
-    guestOnly
+    resetPassword
 } from "./auth-utils.js";
 
 import {
@@ -23,19 +21,19 @@ GUEST ONLY
 guestOnly();
 
 /*==================================
-DOM ELEMENTS
+DOM
 ==================================*/
 
 const loginForm =
 document.getElementById("loginForm");
 
-const emailInput =
+const email =
 document.getElementById("email");
 
-const passwordInput =
+const password =
 document.getElementById("password");
 
-const rememberMe =
+const remember =
 document.getElementById("remember");
 
 const authButton =
@@ -44,17 +42,20 @@ document.getElementById("authButton");
 const googleButton =
 document.getElementById("googleLogin");
 
+const forgotPassword =
+document.getElementById("forgotPassword");
+
 const togglePassword =
 document.getElementById("togglePassword");
+
+const loadingScreen =
+document.getElementById("loadingScreen");
 
 const buttonText =
 document.getElementById("buttonText");
 
 const buttonLoader =
 document.getElementById("buttonLoader");
-
-const loadingScreen =
-document.getElementById("loadingScreen");
 
 const toast =
 document.getElementById("toast");
@@ -65,33 +66,18 @@ document.getElementById("toastMessage");
 const toastIcon =
 document.getElementById("toastIcon");
 
-console.log("Login.js Loaded Successfully");
+console.log("Login Page Loaded");
 
 /*==================================================
-UY POWER SOLUTIONS
-LOGIN SYSTEM
-Part 2
-UI Functions
+PART 2
+UI FUNCTIONS
 ==================================================*/
-
-/*==================================
-EMAIL VALIDATION
-==================================*/
-
-function validateEmail(email){
-
-    const pattern =
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    return pattern.test(email.trim());
-
-}
 
 /*==================================
 SHOW LOADING
 ==================================*/
 
-function showLoading(){
+function showLoading() {
 
     loadingScreen.style.display = "flex";
 
@@ -109,7 +95,7 @@ function showLoading(){
 HIDE LOADING
 ==================================*/
 
-function hideLoading(){
+function hideLoading() {
 
     loadingScreen.style.display = "none";
 
@@ -127,37 +113,33 @@ function hideLoading(){
 SHOW TOAST
 ==================================*/
 
-function showToast(message,type="success"){
+function showToast(message, type = "success") {
 
     toastMessage.textContent = message;
 
     toast.classList.add("show");
 
-    if(type==="success"){
+    if (type === "success") {
 
-        toast.style.borderLeft =
-        "6px solid #22c55e";
+        toast.style.borderLeft = "6px solid #22c55e";
 
-        toastIcon.className =
-        "fa-solid fa-circle-check";
+        toastIcon.className = "fa-solid fa-circle-check";
 
     }
 
-    else{
+    else {
 
-        toast.style.borderLeft =
-        "6px solid #ef4444";
+        toast.style.borderLeft = "6px solid #ef4444";
 
-        toastIcon.className =
-        "fa-solid fa-circle-xmark";
+        toastIcon.className = "fa-solid fa-circle-xmark";
 
     }
 
-    setTimeout(()=>{
+    setTimeout(() => {
 
         toast.classList.remove("show");
 
-    },3500);
+    }, 3000);
 
 }
 
@@ -165,30 +147,23 @@ function showToast(message,type="success"){
 PASSWORD TOGGLE
 ==================================*/
 
-togglePassword.addEventListener("click",()=>{
+togglePassword.addEventListener("click", () => {
 
-    const icon =
-    togglePassword.querySelector("i");
+    const icon = togglePassword.querySelector("i");
 
-    if(passwordInput.type==="password"){
+    if (password.type === "password") {
 
-        passwordInput.type="text";
+        password.type = "text";
 
-        icon.classList.replace(
-            "fa-eye",
-            "fa-eye-slash"
-        );
+        icon.classList.replace("fa-eye", "fa-eye-slash");
 
     }
 
-    else{
+    else {
 
-        passwordInput.type="password";
+        password.type = "password";
 
-        icon.classList.replace(
-            "fa-eye-slash",
-            "fa-eye"
-        );
+        icon.classList.replace("fa-eye-slash", "fa-eye");
 
     }
 
@@ -198,127 +173,68 @@ togglePassword.addEventListener("click",()=>{
 REMEMBER EMAIL
 ==================================*/
 
-window.addEventListener("load",()=>{
+window.addEventListener("load", () => {
 
-    const savedEmail =
-    localStorage.getItem("rememberEmail");
+    const savedEmail = localStorage.getItem("rememberEmail");
 
-    if(savedEmail){
+    if (savedEmail) {
 
-        emailInput.value = savedEmail;
+        email.value = savedEmail;
 
-        rememberMe.checked = true;
+        remember.checked = true;
 
     }
 
 });
 
-function saveRememberEmail(){
+function saveRememberEmail() {
 
-    if(rememberMe.checked){
+    if (remember.checked) {
 
-        localStorage.setItem(
-
-            "rememberEmail",
-
-            emailInput.value
-
-        );
+        localStorage.setItem("rememberEmail", email.value);
 
     }
 
-    else{
+    else {
 
-        localStorage.removeItem(
-
-            "rememberEmail"
-
-        );
+        localStorage.removeItem("rememberEmail");
 
     }
 
 }
 
-rememberMe.addEventListener(
+remember.addEventListener("change", saveRememberEmail);
 
-    "change",
-
-    saveRememberEmail
-
-);
-
-emailInput.addEventListener(
-
-    "keyup",
-
-    saveRememberEmail
-
-);
+email.addEventListener("keyup", saveRememberEmail);
 
 /*==================================================
-UY POWER SOLUTIONS
-LOGIN SYSTEM
-Part 3
-Email Login
+PART 3
+LOGIN
 ==================================================*/
 
 loginForm.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
-    const email =
-    emailInput.value.trim().toLowerCase();
+    const emailValue = email.value.trim().toLowerCase();
 
-    const password =
-    passwordInput.value.trim();
+    const passwordValue = password.value.trim();
 
-    if(email === ""){
+    if (emailValue === "") {
 
-        showToast(
-            "Please enter your email.",
-            "error"
-        );
+        showToast("Please enter your email.", "error");
 
-        emailInput.focus();
+        email.focus();
 
         return;
 
     }
 
-    if(!validateEmail(email)){
+    if (passwordValue === "") {
 
-        showToast(
-            "Please enter a valid email address.",
-            "error"
-        );
+        showToast("Please enter your password.", "error");
 
-        emailInput.focus();
-
-        return;
-
-    }
-
-    if(password === ""){
-
-        showToast(
-            "Please enter your password.",
-            "error"
-        );
-
-        passwordInput.focus();
-
-        return;
-
-    }
-
-    if(password.length < 6){
-
-        showToast(
-            "Password must be at least 6 characters.",
-            "error"
-        );
-
-        passwordInput.focus();
+        password.focus();
 
         return;
 
@@ -326,13 +242,15 @@ loginForm.addEventListener("submit", async (e) => {
 
     showLoading();
 
-    try{
+    try {
 
-        const userCredential =
-        await loginUser(email,password);
+        const user = await loginUser(
 
-        const user =
-        userCredential.user;
+            emailValue,
+
+            passwordValue
+
+        );
 
         await createNotification({
 
@@ -342,92 +260,63 @@ loginForm.addEventListener("submit", async (e) => {
 
             message: "Welcome back to UY Power Solutions.",
 
-            type: "info",
+            type: "success",
 
             icon: "fa-right-to-bracket",
 
             sender: "system",
 
-            link: "index.html"
+            link: "home.html"
 
         });
 
         hideLoading();
 
-        showToast(
-            "Login Successful!"
-        );
+        showToast("Login successful!");
 
-        setTimeout(()=>{
+        setTimeout(() => {
 
-            window.location.href =
-            "index.html";
+            window.location.href = "home.html";
 
-        },1200);
+        }, 1200);
 
     }
 
-    catch(error){
+    catch (error) {
 
         hideLoading();
 
-        switch(error.code){
+        console.error(error);
+
+        switch (error.code) {
+
+            case "auth/invalid-credential":
+
+                showToast("Invalid email or password.", "error");
+
+                break;
 
             case "auth/user-not-found":
 
-                showToast(
-                    "Account not found.",
-                    "error"
-                );
+                showToast("Account not found.", "error");
 
                 break;
 
             case "auth/wrong-password":
 
-            case "auth/invalid-credential":
-
-                showToast(
-                    "Invalid email or password.",
-                    "error"
-                );
-
-                break;
-
-            case "auth/invalid-email":
-
-                showToast(
-                    "Invalid email address.",
-                    "error"
-                );
-
-                break;
-
-            case "auth/too-many-requests":
-
-                showToast(
-                    "Too many login attempts. Please try again later.",
-                    "error"
-                );
+                showToast("Incorrect password.", "error");
 
                 break;
 
             case "auth/network-request-failed":
 
-                showToast(
-                    "Please check your internet connection.",
-                    "error"
-                );
+                showToast("Please check your internet connection.", "error");
 
                 break;
 
             default:
 
-                console.error(error);
-
-                showToast(
-                    error.message,
-                    "error"
-                );
+                showToast(error.message, "error");
 
         }
 
@@ -436,21 +325,17 @@ loginForm.addEventListener("submit", async (e) => {
 });
 
 /*==================================================
-UY POWER SOLUTIONS
-LOGIN SYSTEM
-Part 4
-Google Login
+PART 4
+GOOGLE LOGIN
 ==================================================*/
 
 googleButton.addEventListener("click", async () => {
 
     showLoading();
 
-    try{
+    try {
 
-        const result = await googleLogin();
-
-        const user = result.user;
+        const user = await googleLogin();
 
         await createNotification({
 
@@ -460,123 +345,108 @@ googleButton.addEventListener("click", async () => {
 
             message: "You logged in successfully with Google.",
 
-            type: "info",
+            type: "success",
 
             icon: "fa-google",
 
             sender: "system",
 
-            link: "index.html"
+            link: "home.html"
 
         });
 
         hideLoading();
 
-        showToast(
-            "Google Login Successful!"
-        );
+        showToast("Google Login Successful!");
 
         setTimeout(() => {
 
-            window.location.href =
-            "index.html";
+            window.location.href = "home.html";
 
         }, 1200);
 
     }
 
-    catch(error){
+    catch (error) {
 
         hideLoading();
 
-        switch(error.code){
+        console.error(error);
+
+        switch (error.code) {
 
             case "auth/popup-closed-by-user":
 
-                showToast(
-                    "Google sign in was cancelled.",
-                    "error"
-                );
+                showToast("Google sign in cancelled.", "error");
 
                 break;
 
             case "auth/popup-blocked":
 
-                showToast(
-                    "Popup was blocked by your browser.",
-                    "error"
-                );
+                showToast("Popup was blocked by your browser.", "error");
 
                 break;
 
             case "auth/network-request-failed":
 
-                showToast(
-                    "Please check your internet connection.",
-                    "error"
-                );
+                showToast("Please check your internet connection.", "error");
 
                 break;
 
             default:
 
-                console.error(error);
-
-                showToast(
-                    error.message,
-                    "error"
-                );
+                showToast(error.message, "error");
 
         }
 
     }
 
 });
+
 /*==================================================
-UY POWER SOLUTIONS
-LOGIN SYSTEM
-Part 5
-Startup & Final Setup
+FORGOT PASSWORD
 ==================================================*/
 
-/*==================================
-CHECK AUTH STATE
-==================================*/
+forgotPassword.addEventListener("click", async (e) => {
 
-import {
-    auth
-} from "./auth-utils.js";
+    e.preventDefault();
 
-import {
-    onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+    const emailValue = email.value.trim();
 
-onAuthStateChanged(auth, (user) => {
+    if (!emailValue) {
 
-    if(user){
+        showToast("Enter your email first.", "error");
 
-        console.log(
-            "Logged in as:",
-            user.email
-        );
+        email.focus();
+
+        return;
 
     }
 
-    else{
+    try {
 
-        console.log(
-            "No active user."
-        );
+        await resetPassword(emailValue);
+
+        showToast("Password reset email sent.");
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        showToast(error.message, "error");
 
     }
 
 });
 
-/*==================================
-STARTUP MESSAGE
-==================================*/
+/*==================================================
+PART 5
+STARTUP
+==================================================*/
 
-window.addEventListener("load",()=>{
+window.addEventListener("load", () => {
 
     console.log("====================================");
 
@@ -586,7 +456,7 @@ window.addEventListener("load",()=>{
 
     console.log("Firebase Connected");
 
-    console.log("Authentication Ready");
+    console.log("Google Authentication Ready");
 
     console.log("====================================");
 
