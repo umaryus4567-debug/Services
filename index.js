@@ -1,230 +1,777 @@
+/*==================================================
+UY POWER SOLUTIONS
+REGISTER SYSTEM
+Part 1
+Imports & DOM Setup
+==================================================*/
+
 import {
     auth,
-    protectPage,
-    loadUser,
-    logoutUser
+    
+    guestOnly,
+
+    registerUser,
+
+    googleLogin,
+
+    createCustomer,
+
+    createGoogleCustomer
+
 } from "./auth-utils.js";
 
 import {
-    listenForNotifications,
-    markAllNotificationsAsRead
+
+    createNotification
+
 } from "./notification-utils.js";
 
-import {
-    onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+/*==================================
+GUEST ONLY
+==================================*/
 
-console.log("Index.js started");
+guestOnly();
 
-onAuthStateChanged(auth, (user) => {
+/*==================================
+DOM ELEMENTS
+==================================*/
 
-    if (!user) {
+const registerForm =
+document.getElementById("registerForm");
 
-        window.location.href = "register.html";
-        return;
+const fullName =
+document.getElementById("fullName");
 
-    }
+const email =
+document.getElementById("email");
 
-});
+const phone =
+document.getElementById("phone");
 
+const password =
+document.getElementById("password");
 
-console.log("Index JS Loaded Successfully");
+const confirmPassword =
+document.getElementById("confirmPassword");
 
+const agreeTerms =
+document.getElementById("agreeTerms");
 
-const notificationButton =
-document.getElementById("notificationButton");
+const registerButton =
+document.getElementById("registerButton");
 
-const notificationCount =
-document.getElementById("notificationCount");
+const googleRegister =
+document.getElementById("googleRegister");
 
-const notificationList =
-document.getElementById("notificationList");
+const togglePassword =
+document.getElementById("togglePassword");
 
-const userName =
-document.getElementById("userName");
+const toggleConfirmPassword =
+document.getElementById("toggleConfirmPassword");
 
-const userEmail =
-document.getElementById("userEmail");
+const loadingScreen =
+document.getElementById("loadingScreen");
 
-const userImage =
-document.getElementById("userImage");
+const buttonText =
+document.getElementById("buttonText");
 
-const notificationDropdown =
-document.getElementById("notificationDropdown");
+const buttonLoader =
+document.getElementById("buttonLoader");
 
-const logoutButton =
-document.getElementById("logoutButton");
+const toast =
+document.getElementById("toast");
 
-protectPage();
+const toastMessage =
+document.getElementById("toastMessage");
 
-loadUser();
+const toastIcon =
+document.getElementById("toastIcon");
 
+const successModal =
+document.getElementById("successModal");
 
-function formatNotificationTime(timestamp){
+const continueButton =
+document.getElementById("continueButton");
 
-    if(!timestamp) return "";
+console.log("Register.js Loaded Successfully");
 
-    const date =
-    timestamp.toDate();
+/*==================================================
+UY POWER SOLUTIONS
+REGISTER SYSTEM
+Part 2
+UI Functions
+==================================================*/
 
-    const now =
-    new Date();
+/*==================================
+SHOW LOADING
+==================================*/
 
-    const seconds =
-    Math.floor((now-date)/1000);
+function showLoading(){
 
-    if(seconds<60){
+    loadingScreen.style.display = "flex";
 
-        return "Just now";
+    buttonText.style.display = "none";
 
-    }
+    buttonLoader.style.display = "inline-block";
 
-    if(seconds<3600){
+    registerButton.disabled = true;
 
-        return Math.floor(seconds/60)+" min ago";
-
-    }
-
-    if(seconds<86400){
-
-        return Math.floor(seconds/3600)+" hrs ago";
-
-    }
-
-    if(seconds<604800){
-
-        return Math.floor(seconds/86400)+" days ago";
-
-    }
-
-    return date.toLocaleDateString();
+    googleRegister.disabled = true;
 
 }
 
+/*==================================
+HIDE LOADING
+==================================*/
 
+function hideLoading(){
 
-    onAuthStateChanged(auth, (user) => {
+    loadingScreen.style.display = "none";
 
-    if (!user) {
+    buttonText.style.display = "inline";
 
-        window.location.href = "login.html";
-        return;
+    buttonLoader.style.display = "none";
+
+    registerButton.disabled = false;
+
+    googleRegister.disabled = false;
+
+}
+
+/*==================================
+SHOW TOAST
+==================================*/
+
+function showToast(message,type="success"){
+
+    toastMessage.textContent = message;
+
+    toast.classList.add("show");
+
+    if(type==="success"){
+
+        toast.style.borderLeft =
+        "6px solid #22c55e";
+
+        toastIcon.className =
+        "fa-solid fa-circle-check";
 
     }
 
-    listenForNotifications(user.uid, (notifications) => {
+    else{
 
-        notificationList.innerHTML = "";
+        toast.style.borderLeft =
+        "6px solid #ef4444";
 
-        if (notifications.length === 0) {
+        toastIcon.className =
+        "fa-solid fa-circle-xmark";
 
-            notificationCount.textContent = "";
+    }
 
-            notificationList.innerHTML = `
-                <div class="empty-notification">
-                    No notifications yet.
-                </div>
-            `;
+    setTimeout(()=>{
 
-            return;
+        toast.classList.remove("show");
 
-        }
+    },3500);
 
-        const unread =
-        notifications.filter(n => !n.read).length;
+}
 
-        notificationCount.textContent =
-        unread || "";
+/*==================================
+SUCCESS MODAL
+==================================*/
 
-        notifications.forEach(notification => {
+function showSuccessModal(){
 
-            notificationList.innerHTML += `
-                <div class="notification-card">
-                    <div class="notification-title">
-                        ${notification.title}
-                    </div>
+    successModal.style.display = "flex";
 
-                    <div class="notification-message">
-                        ${notification.message}
-                    </div>
-                </div>
-            `;
+}
 
-        });
+if(continueButton){
 
-    });
+    continueButton.addEventListener("click",()=>{
 
-});
-
-document
-.querySelectorAll(".notification-card")
-.forEach(card => {
-
-    card.addEventListener("click", () => {
-
-        const link = card.dataset.link;
-
-        if(link){
-
-            window.location.href = link;
-
-        }
-
-    });
-
-});
-
-
-if (notificationButton) {
-
-    notificationButton.addEventListener("click", async () => {
-
-        notificationDropdown.classList.toggle("show");
-
-        const user = auth.currentUser;
-
-        if(user){
-
-            await markAllNotificationsAsRead(user.uid);
-
-        }
+        window.location.href = "index.html";
 
     });
 
 }
 
+/*==================================
+PASSWORD TOGGLE
+==================================*/
 
-window.addEventListener("load", () => {
+function toggleVisibility(input,button){
 
-    console.log(
-        "Campus Electrical Support Loaded Successfully"
+    const icon = button.querySelector("i");
+
+    if(input.type==="password"){
+
+        input.type="text";
+
+        icon.classList.replace(
+
+            "fa-eye",
+
+            "fa-eye-slash"
+
+        );
+
+    }
+
+    else{
+
+        input.type="password";
+
+        icon.classList.replace(
+
+            "fa-eye-slash",
+
+            "fa-eye"
+
+        );
+
+    }
+
+}
+
+togglePassword.addEventListener("click",()=>{
+
+    toggleVisibility(
+
+        password,
+
+        togglePassword
+
     );
 
 });
 
-if(logoutButton){
+toggleConfirmPassword.addEventListener("click",()=>{
 
-    logoutButton.addEventListener("click",()=>{
+    toggleVisibility(
 
-        logoutUser();
+        confirmPassword,
+
+        toggleConfirmPassword
+
+    );
+
+});
+
+/*==================================
+INPUT ANIMATION
+==================================*/
+
+document
+.querySelectorAll(".input-wrapper input")
+.forEach(input=>{
+
+    input.addEventListener("focus",()=>{
+
+        input.parentElement.style.transform =
+        "translateY(-2px)";
+
+    });
+
+    input.addEventListener("blur",()=>{
+
+        input.parentElement.style.transform =
+        "translateY(0)";
+
+    });
+
+});
+
+
+/*==================================================
+UY POWER SOLUTIONS
+REGISTER SYSTEM
+Part 3
+Validation
+==================================================*/
+
+/*==================================
+EMAIL VALIDATION
+==================================*/
+
+function validateEmail(email){
+
+    const pattern =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    return pattern.test(email.trim());
+
+}
+
+/*==================================
+PHONE VALIDATION
+==================================*/
+
+function validatePhone(phone){
+
+    return /^[0-9]{11}$/.test(phone.trim());
+
+}
+
+/*==================================
+SHOW INPUT ERROR
+==================================*/
+
+function markInvalid(input){
+
+    input.style.borderColor = "#ef4444";
+
+    input.focus();
+
+}
+
+/*==================================
+CLEAR ERRORS
+==================================*/
+
+function clearErrors(){
+
+    document.querySelectorAll("input").forEach(input=>{
+
+        input.style.borderColor = "#e2e8f0";
 
     });
 
 }
 
-document.addEventListener("click",(e)=>{
+/*==================================
+VALIDATE FORM
+==================================*/
+
+function validateForm(){
+
+    clearErrors();
+
+    if(fullName.value.trim().length < 3){
+
+        showToast(
+
+            "Full name must contain at least 3 characters.",
+
+            "error"
+
+        );
+
+        markInvalid(fullName);
+
+        return false;
+
+    }
+
+    if(!validateEmail(email.value)){
+
+        showToast(
+
+            "Please enter a valid email address.",
+
+            "error"
+
+        );
+
+        markInvalid(email);
+
+        return false;
+
+    }
+
+    if(!validatePhone(phone.value)){
+
+        showToast(
+
+            "Phone number must contain exactly 11 digits.",
+
+            "error"
+
+        );
+
+        markInvalid(phone);
+
+        return false;
+
+    }
+
+    if(password.value.length < 6){
+
+        showToast(
+
+            "Password must be at least 6 characters.",
+
+            "error"
+
+        );
+
+        markInvalid(password);
+
+        return false;
+
+    }
+
+    if(password.value !== confirmPassword.value){
+
+        showToast(
+
+            "Passwords do not match.",
+
+            "error"
+
+        );
+
+        markInvalid(confirmPassword);
+
+        return false;
+
+    }
+
+    if(!agreeTerms.checked){
+
+        showToast(
+
+            "Please agree to the Terms & Conditions.",
+
+            "error"
+
+        );
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+/*==================================================
+UY POWER SOLUTIONS
+REGISTER SYSTEM
+Part 4
+Email Registration
+==================================================*/
+
+registerForm.addEventListener("submit", async (e) => {
+
+    e.preventDefault();
+
+    if(!validateForm()) return;
+
+    showLoading();
+
+    try{
+
+        const userCredential = await registerUser(
+
+            fullName.value.trim(),
+
+            email.value.trim().toLowerCase(),
+
+            password.value.trim()
+
+        );
+
+        const user = userCredential.user;
+
+        await createCustomer(
+
+            user,
+
+            phone.value.trim()
+
+        );
+
+        await createNotification({
+
+            uid: user.uid,
+
+            title: "Welcome to UY Power Solutions",
+
+            message: "Your account has been created successfully. We're glad to have you with us.",
+
+            type: "success",
+
+            icon: "fa-circle-check",
+
+            sender: "system",
+
+            link: "index.html"
+
+        });
+
+        hideLoading();
+
+        showToast(
+
+            "Account created successfully."
+
+        );
+
+        registerForm.reset();
+
+        showSuccessModal();
+
+    }
+
+    catch(error){
+
+        hideLoading();
+
+        console.error(error);
+
+        switch(error.code){
+
+            case "auth/email-already-in-use":
+
+                showToast(
+
+                    "This email is already registered.",
+
+                    "error"
+
+                );
+
+                markInvalid(email);
+
+                break;
+
+            case "auth/invalid-email":
+
+                showToast(
+
+                    "Invalid email address.",
+
+                    "error"
+
+                );
+
+                markInvalid(email);
+
+                break;
+
+            case "auth/weak-password":
+
+                showToast(
+
+                    "Password is too weak.",
+
+                    "error"
+
+                );
+
+                markInvalid(password);
+
+                break;
+
+            case "auth/network-request-failed":
+
+                showToast(
+
+                    "Please check your internet connection.",
+
+                    "error"
+
+                );
+
+                break;
+
+            default:
+
+                showToast(
+
+                    error.message,
+
+                    "error"
+
+                );
+
+        }
+
+    }
+
+});
+
+/*==================================================
+UY POWER SOLUTIONS
+REGISTER SYSTEM
+Part 5
+Google Registration
+==================================================*/
+
+googleRegister.addEventListener("click", async () => {
+
+    showLoading();
+
+    try{
+
+        const result = await googleLogin();
+
+        const user = result.user;
+
+        await createGoogleCustomer(user);
+
+        await createNotification({
+
+            uid: user.uid,
+
+            title: "Google Registration",
+
+            message: "Your Google account has been registered successfully.",
+
+            type: "success",
+
+            icon: "fa-google",
+
+            sender: "system",
+
+            link: "index.html"
+
+        });
+
+        hideLoading();
+
+        showToast(
+            "Google registration successful."
+        );
+
+        setTimeout(() => {
+
+            window.location.href =
+            "index.html";
+
+        }, 1200);
+
+    }
+
+    catch(error){
+
+        hideLoading();
+
+        console.error(error);
+
+        switch(error.code){
+
+            case "auth/popup-closed-by-user":
+
+                showToast(
+                    "Google sign in was cancelled.",
+                    "error"
+                );
+
+                break;
+
+            case "auth/popup-blocked":
+
+                showToast(
+                    "Popup was blocked by your browser.",
+                    "error"
+                );
+
+                break;
+
+            case "auth/network-request-failed":
+
+                showToast(
+                    "Please check your internet connection.",
+                    "error"
+                );
+
+                break;
+
+            default:
+
+                showToast(
+                    error.message,
+                    "error"
+                );
+
+        }
+
+    }
+
+});
+
+/*==================================================
+UY POWER SOLUTIONS
+REGISTER SYSTEM
+Part 6
+Startup & Final Setup
+==================================================*/
+
+/*==================================
+AUTH STATE
+==================================*/
+
+import {
+
+    auth
+
+} from "./auth-utils.js";
+
+import {
+
+    onAuthStateChanged
+
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+onAuthStateChanged(auth,(user)=>{
+
+    if(user){
+
+        console.log(
+            "Logged in as:",
+            user.email
+        );
+
+    }
+
+    else{
+
+        console.log(
+            "No active user."
+        );
+
+    }
+
+});
+
+/*==================================
+PRESS ENTER
+==================================*/
+
+document.addEventListener("keydown",(e)=>{
 
     if(
 
-    notificationDropdown &&
-    notificationButton &&
-    !notificationDropdown.contains(e.target) &&
-    !notificationButton.contains(e.target)
+        e.key==="Enter" &&
 
-){
+        document.activeElement.tagName==="INPUT"
 
-        notificationDropdown.classList.remove("show");
+    ){
+
+        registerForm.requestSubmit();
 
     }
+
+});
+
+/*==================================
+STARTUP MESSAGE
+==================================*/
+
+window.addEventListener("load",()=>{
+
+    console.log("====================================");
+
+    console.log("UY POWER SOLUTIONS");
+
+    console.log("Register System Ready");
+
+    console.log("Firebase Connected");
+
+    console.log("Google Authentication Ready");
+
+    console.log("====================================");
 
 });
