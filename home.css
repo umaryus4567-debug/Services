@@ -662,40 +662,6 @@ NOTIFICATION DROPDOWN
 
 }
 
-.notification-dropdown{
-
-    position:absolute;
-
-    top:65px;
-
-    right:0;
-
-    width:340px;
-
-    max-height:450px;
-
-    overflow-y:auto;
-
-    background:#ffffff;
-
-    border-radius:18px;
-
-    box-shadow:0 15px 40px rgba(0,0,0,.12);
-
-    display:none;
-
-    z-index:999;
-
-    animation:fadeIn .25s ease;
-
-}
-
-.notification-dropdown.show{
-
-    display:block;
-
-}
-
 .notification-header{
 
     display:flex;
@@ -782,14 +748,46 @@ NOTIFICATION DROPDOWN
     color:#94a3b8;
 
 }
+.notification-dropdown{
 
+    position:absolute;
+
+    top:65px;
+
+    right:0;
+
+    width:320px;
+
+    max-height:450px;
+
+    overflow-y:auto;
+
+    background:#fff;
+
+    border-radius:18px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.12);
+
+    display:none;
+
+    z-index:9999;
+    
+    animation: fadeIn .25 ease;
+
+}
+
+.notification-dropdown.show{
+
+    display:block;
+
+}
 @keyframes fadeIn{
 
 from{
 
 opacity:0;
 
-transform:translateY(-10px);
+transform:translateY(10px);
 
 }
 
