@@ -216,7 +216,7 @@ onAuthStateChanged(auth, async (user) => {
 
             container.innerHTML = `
 
-                <a href="dashboard.html"
+                <a href="staff.html"
                    class="staff-dashboard-btn">
 
                    <i class="fa-solid fa-user-shield"></i>
