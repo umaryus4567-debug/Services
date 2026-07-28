@@ -37,7 +37,13 @@ document.getElementById("logoutButton");
 
 protectPage();
 
-loadUser();
+onAuthStateChanged(auth,(user)=>{
+
+    if(!user) return;
+
+    loadUser();
+
+});
 onAuthStateChanged(auth, (user) => {
 
     if (!user) return;
@@ -161,17 +167,7 @@ window.addEventListener("load", () => {
 
 }
 
-window.addEventListener("load", () => {
 
-    setTimeout(() => {
-
-        document
-            .getElementById("loader")
-            .classList.add("loader-hide");
-
-    }, 800);
-
-});
 
 function showToast(message,type="success"){
 
@@ -239,3 +235,19 @@ onAuthStateChanged(auth, async (user) => {
 
 });
 
+window.addEventListener("load", () => {
+
+    setTimeout(() => {
+
+        const loader =
+        document.getElementById("loader");
+
+        if(loader){
+
+            loader.classList.add("loader-hide");
+
+        }
+
+    },800);
+
+});
