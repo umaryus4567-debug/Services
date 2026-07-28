@@ -183,13 +183,21 @@ export function authListener(callback) {
 PROTECT PAGE
 ==================================*/
 
-export function protectPage() {
+export function protectPage(){
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth,(user)=>{
 
-        console.log("Protect Check:", user);
+        const loader=document.getElementById("pageLoader");
 
-        if (!user) {
+        if(user){
+
+            if(loader){
+
+                loader.style.display="none";
+
+            }
+
+        }else{
 
             window.location.replace("login.html");
 
@@ -203,21 +211,31 @@ export function protectPage() {
 GUEST ONLY
 ==================================*/
 
-export function guestOnly() {
+    export function guestOnly(){
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth,(user)=>{
 
-        console.log("Guest Check:", user);
-
-        if (user) {
+        if(user){
 
             window.location.replace("home.html");
+
+        }else{
+
+            // Guest is allowed.
+            const loader=document.getElementById("pageLoader");
+
+            if(loader){
+
+                loader.style.display="none";
+
+            }
 
         }
 
     });
 
 }
+
 
 /*==================================
 LOAD USER
@@ -227,7 +245,13 @@ export function loadUser() {
 
     onAuthStateChanged(auth, (user) => {
 
-        if (!user) return;
+       if (!user){
+
+    window.location.replace("login.html");
+
+    return;
+
+}
 
         const userName = document.getElementById("userName");
         const userEmail = document.getElementById("userEmail");
@@ -319,3 +343,4 @@ export function protectStaffPage() {
     });
 
 }
+
