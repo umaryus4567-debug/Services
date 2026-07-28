@@ -55,8 +55,7 @@ document.getElementById("searchInput");
    LOAD REQUESTS
 ========================== */
 await loadTechnicians();
-onSnapshoth
-
+onSnapshot(
     collection(db, "service-request"),
 
     (snapshot) => {
@@ -569,6 +568,7 @@ function getStatusColor(status){
             return "#ff9800";
     }
 }
+
 window.addEventListener("load", () => {
 
     setTimeout(() => {
