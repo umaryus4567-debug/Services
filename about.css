@@ -225,7 +225,7 @@ footer{
     padding:25px 15px;
     line-height:1.8;
 }
-}
+
 /* Highlights */
 
 .highlights{
@@ -291,6 +291,31 @@ footer{
     box-shadow:0 4px 15px rgba(0,0,0,.08);
 }
 
+/* Scroll Reveal Animation */
+/* Scroll Reveal Animation */
+
+.reveal{
+    opacity:0;
+    transform:translateY(40px);
+    transition:all .7s ease;
+}
+
+.reveal.active{
+    opacity:1;
+    transform:translateY(0);
+}
+/* Scroll Animation */
+
+.hidden{
+    opacity:0;
+    transform:translateY(40px);
+    transition:all .8s ease;
+}
+
+.show{
+    opacity:1;
+    transform:translateY(0);
+}
 /* Mobile */
 
 @media(max-width:768px){

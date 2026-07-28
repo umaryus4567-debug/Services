@@ -13,9 +13,22 @@ from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 const searchBtn =
 document.getElementById("searchBtn");
+const refreshBtn =
+document.getElementById("refreshBtn");
 
 const result =
 document.getElementById("result");
+document
+.getElementById("searchInput")
+.addEventListener("keypress",(e)=>{
+
+if(e.key==="Enter"){
+
+searchBtn.click();
+
+}
+
+});
 
 searchBtn.addEventListener(
 "click",
@@ -36,8 +49,15 @@ alert(
 return;
 }
 
-result.innerHTML =
-"<p>Searching...</p>";
+result.innerHTML = `
+<div class="loading-card">
+
+<div class="spinner"></div>
+
+<p>Searching for your request...</p>
+
+</div>
+`;
 
 try{
 
@@ -62,6 +82,8 @@ buildCard(
 data,
 requestDoc.id
 );
+
+refreshBtn.style.display = "block";
 
 return;
 }
@@ -90,12 +112,18 @@ if(snapshot.empty){
 
 result.innerHTML = `
 
-<div class="result-card">
+<div class="empty-state">
+
+<div class="empty-icon">📭</div>
 
 <h3>No Request Found</h3>
 
 <p>
-No request exists for this phone number or Request ID.
+We couldn't find any request matching the phone number or Request ID you entered.
+</p>
+
+<p class="hint">
+Please check your details and try again.
 </p>
 
 </div>
@@ -117,6 +145,8 @@ docItem.id
 );
 
 });
+
+refreshBtn.style.display = "block";
 
 }catch(error){
 
@@ -163,7 +193,18 @@ ${data.Customername || ""}
 <div class="request-id">
 
 <b>Request ID:</b>
+
+<span id="req-${id}">
 ${id}
+</span>
+
+<button
+class="copy-btn"
+onclick="copyRequestID('${id}')">
+
+Copy
+
+</button>
 
 </div>
 
@@ -209,6 +250,12 @@ ${data.Technician || "Not Assigned Yet"}
 
 </p>
 
+<div class="timeline">
+
+${buildTimeline(data.Status)}
+
+</div>
+
 <div
 class="status-badge ${getStatusClass(data.Status)}">
 
@@ -239,3 +286,51 @@ return "pending";
 }
 
 }
+function buildTimeline(status){
+
+const steps=[
+"Pending",
+"Accepted",
+"Completed ✅"
+];
+
+let html="";
+
+steps.forEach(step=>{
+
+const active=
+steps.indexOf(step)<=steps.indexOf(status)
+? "active"
+: "";
+
+html+=`
+
+<div class="timeline-step ${active}">
+
+<div class="circle"></div>
+
+<span>${step.replace(" ✅","")}</span>
+
+</div>
+
+`;
+
+});
+
+return html;
+
+}
+
+window.copyRequestID = function(id){
+
+navigator.clipboard.writeText(id);
+
+alert("✅ Request ID copied.");
+
+};
+
+refreshBtn.addEventListener("click", () => {
+
+searchBtn.click();
+
+});

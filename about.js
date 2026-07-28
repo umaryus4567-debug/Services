@@ -1,26 +1,45 @@
-const counters =
-document.querySelectorAll(".stat-box h2");
+// Scroll Reveal Animation
 
-counters.forEach(counter => {
+const observer = new IntersectionObserver((entries) => {
 
-    const target =
-    parseInt(counter.innerText);
+    entries.forEach(entry => {
 
-    if(isNaN(target)) return;
+        if (entry.isIntersecting) {
 
-    let count = 0;
+            entry.target.classList.add("show");
 
-    const update = () => {
-
-        count += Math.ceil(target / 50);
-
-        if(count >= target){
-            counter.innerText = target + "+";
-        } else {
-            counter.innerText = count;
-            requestAnimationFrame(update);
         }
-    };
 
-    update();
+    });
+
+}, {
+    threshold: 0.15
 });
+
+document.querySelectorAll(
+".card, .highlight-card, .why-box, .member, .about-content"
+).forEach(item => {
+
+    item.classList.add("hidden");
+
+    observer.observe(item);
+
+});
+
+const reveals = document.querySelectorAll(".reveal");
+
+function revealOnScroll() {
+    const trigger = window.innerHeight * 0.85;
+
+    reveals.forEach(section => {
+        const top = section.getBoundingClientRect().top;
+
+        if (top < trigger) {
+            section.classList.add("active");
+        }
+    });
+}
+
+window.addEventListener("scroll", revealOnScroll);
+
+revealOnScroll();

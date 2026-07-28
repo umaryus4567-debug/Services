@@ -16,11 +16,19 @@ search.addEventListener(
         const text =
         card.textContent
         .toLowerCase();
+        
+        if(text.includes(keyword)){
 
-        card.style.display =
-        text.includes(keyword)
-        ? "block"
-        : "none";
+card.style.display = "block";
+
+card.style.animation = "fadeUp .35s ease";
+
+}else{
+
+card.style.display = "none";
+
+}
+
 
     });
 

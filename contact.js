@@ -1,4 +1,5 @@
 import { db } from "./firebase-config.js";
+import { showToast } from "./ui.js";
 
 import {
     collection,
@@ -27,6 +28,16 @@ async (e) => {
 
     const message =
     document.getElementById("message").value.trim();
+    
+    const submitBtn =
+document.querySelector(
+'button[type="submit"]'
+);
+
+submitBtn.disabled = true;
+
+submitBtn.innerHTML =
+'<ion-icon name="reload"></ion-icon> Sending...';
 
     try {
 
@@ -99,20 +110,42 @@ ${message}`;
         window.location.href =
         gmailURL;
 
-        alert(
-        "Message sent successfully ✅"
-        );
+        showToast(
+"Message sent successfully ✅",
+"success"
+);
 
         form.reset();
+        submitBtn.disabled = false;
+
+submitBtn.innerHTML =
+'<ion-icon name="book"></ion-icon> Submit Request';
 
     } catch(error) {
 
         console.log(error);
+        submitBtn.disabled = false;
 
-        alert(
-        "Failed to send message ❌"
-        );
+submitBtn.innerHTML =
+'<ion-icon name="book"></ion-icon> Submit Request';
+
+        showToast(
+"Unable to send message.",
+"error"
+);
 
     }
+
+});
+
+window.addEventListener("load", () => {
+
+    setTimeout(() => {
+
+        document
+            .getElementById("loader")
+            ?.classList.add("loader-hide");
+
+    }, 700);
 
 });
