@@ -1,4 +1,7 @@
-import { db } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
+
+import { onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
 import {
     protectStaffPage
@@ -18,6 +21,7 @@ getDoc,
 addDoc
 }
 from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
 async function loadTechnicians(){
 
     const snapshot = await getDocs(
@@ -565,3 +569,14 @@ function getStatusColor(status){
             return "#ff9800";
     }
 }
+window.addEventListener("load", () => {
+
+    setTimeout(() => {
+
+        document
+            .getElementById("loader")
+            ?.classList.add("loader-hide");
+
+    }, 700);
+
+});

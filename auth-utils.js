@@ -298,9 +298,13 @@ export function protectStaffPage() {
 
             if (data.role !== "staff") {
 
-                window.location.replace("home.html");
+    alert("Access denied. Staff only.");
 
-            }
+    window.location.replace("home.html");
+
+    return;
+
+}
 
         }
 

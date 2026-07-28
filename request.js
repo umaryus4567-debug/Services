@@ -51,8 +51,8 @@ document.querySelector(
 );
 
 submitBtn.disabled = true;
-submitBtn.textContent =
-"Submitting...";
+submitBtn.innerHTML =
+'<span class="spinner"></span> Submitting...';
 
         await addDoc(
             collection(db, "service-request"),
@@ -92,5 +92,17 @@ submitBtn.textContent =
         alert(error.message);
 
     }
+
+});
+
+window.addEventListener("load", () => {
+
+    setTimeout(() => {
+
+        document
+            .getElementById("loader")
+            ?.classList.add("loader-hide");
+
+    }, 700);
 
 });
