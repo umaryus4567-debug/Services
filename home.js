@@ -1,3 +1,9 @@
+import { db } from "./firebase-config.js";
+
+import {
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 import {
     auth,
     protectPage,
@@ -154,3 +160,81 @@ window.addEventListener("load", () => {
 });
 
 }
+
+window.addEventListener("load", () => {
+
+    setTimeout(() => {
+
+        document
+            .getElementById("loader")
+            .classList.add("loader-hide");
+
+    }, 800);
+
+});
+
+function showToast(message,type="success"){
+
+const toast=document.getElementById("toast");
+
+toast.textContent=message;
+
+toast.className=`toast ${type} show`;
+
+setTimeout(()=>{
+
+toast.className="toast";
+
+},3000);
+
+}
+
+/*==================================
+SHOW STAFF DASHBOARD BUTTON
+==================================*/
+
+onAuthStateChanged(auth, async (user) => {
+
+    if (!user) return;
+
+    const container =
+    document.getElementById("staffDashboardContainer");
+
+    if (!container) return;
+
+    try {
+
+        const snap = await getDoc(
+            doc(db, "users", user.uid)
+        );
+
+        if (!snap.exists()) return;
+
+        const data = snap.data();
+
+        if (data.role === "staff") {
+
+            container.innerHTML = `
+
+                <a href="dashboard.html"
+                   class="staff-dashboard-btn">
+
+                   <i class="fa-solid fa-user-shield"></i>
+
+                   Staff Dashboard
+
+                </a>
+
+            `;
+
+        }
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+    }
+
+});

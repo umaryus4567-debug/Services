@@ -9,7 +9,24 @@
 </head>
 
 <body>
-  
+  <!-- Loading Screen -->
+<div id="loader">
+
+    <div class="loader-content">
+
+        <div class="loader-logo">
+            ⚡
+        </div>
+
+        <h2>UY Power Solutions</h2>
+
+        <p>Loading...</p>
+
+        <div class="loader-spinner"></div>
+
+    </div>
+
+</div>
 
     <!-- Header -->
     
@@ -28,9 +45,10 @@
                 <h2 id="title">Campus/Off-Campus Electrical Support</h2>
                  
             </div>
-            <div class="top-user-bar">
 
-    <div class="notification-wrapper">
+<div class="top-user-bar">
+
+    <div class="notification-container">
 
         <button
             id="notificationButton"
@@ -38,7 +56,7 @@
 
             <ion-icon name="notifications-outline"></ion-icon>
 
-            <span id="notificationCount">0</span>
+            <span id="notificationCount"></span>
 
         </button>
 
@@ -51,20 +69,22 @@
                 <h3>Notifications</h3>
 
                 <small id="clearNotifications">
+
                     Mark all as read
+
                 </small>
 
             </div>
 
             <div id="notificationList">
-              <div
-    id="emptyNotification"
-    class="empty-notification">
 
-    No notifications yet.
+                <div
+                    id="emptyNotification"
+                    class="empty-notification">
 
-</div>
+                    No notifications yet.
 
+                </div>
 
             </div>
 
@@ -73,11 +93,13 @@
     </div>
 
     <div class="user-info">
+      <a href="profile.html">
 
         <img
             id="userImage"
             src="default-user.png"
             alt="Profile">
+        </a>
 
         <div>
 
@@ -90,10 +112,13 @@
     </div>
 
     <button id="logoutButton">
+
         Logout
+
     </button>
 
 </div>
+<div id="staffDashboardContainer"></div>
 
             <nav class="nav">
               
@@ -406,10 +431,6 @@
                 &copy; 2026 Campus Electrical Support.
                 All rights reserved.
             </p>
-                 <a href="staff.html">
-                  <ion-icon name="book"></ion-icon>
-                   Ad
-                  </a>
 
             <p>
                 Version 1.0
@@ -432,5 +453,6 @@ class="floating-whatsapp">
 
 <script type="module" src="home.js"></script>
 <script type="module" src="auth-guard.js"></script>
+<div id="toast" class="toast"></div>
 </body>
 </html>

@@ -263,3 +263,55 @@ EXPORT AUTH
 ==================================*/
 
 export { auth };
+
+/*==================================
+STAFF ONLY
+==================================*/
+
+export function protectStaffPage() {
+
+    onAuthStateChanged(auth, async (user) => {
+
+        if (!user) {
+
+            window.location.replace("login.html");
+
+            return;
+
+        }
+
+        try {
+
+            const userRef = doc(db, "users", user.uid);
+
+            const userSnap = await getDoc(userRef);
+
+            if (!userSnap.exists()) {
+
+                window.location.replace("home.html");
+
+                return;
+
+            }
+
+            const data = userSnap.data();
+
+            if (data.role !== "staff") {
+
+                window.location.replace("home.html");
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            window.location.replace("home.html");
+
+        }
+
+    });
+
+}
