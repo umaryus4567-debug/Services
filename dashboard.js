@@ -1,4 +1,10 @@
 import { db } from "./firebase-config.js";
+
+import {
+    protectStaffPage
+} from "./auth-utils.js";
+
+protectStaffPage();
 let allRequests = [];
 let technicians = [];
 import {
@@ -45,7 +51,8 @@ document.getElementById("searchInput");
    LOAD REQUESTS
 ========================== */
 await loadTechnicians();
-onSnapshot(
+onSnapshoth
+
     collection(db, "service-request"),
 
     (snapshot) => {
