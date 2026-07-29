@@ -226,7 +226,139 @@ PAGE LOADER
  z-index:99999;
 
 }
+.password-box{
 
+    position:relative;
+
+}
+
+.password-box input{
+
+    width:100%;
+
+    padding-right:50px;
+
+}
+
+#togglePassword{
+
+    position:absolute;
+
+    right:15px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    cursor:pointer;
+
+    font-size:22px;
+
+    color:#666;
+
+}
+/*==================================
+TOAST
+==================================*/
+
+.toast{
+
+    position:fixed;
+
+    top:25px;
+
+    right:25px;
+
+    background:#ffffff;
+
+    color:#333;
+
+    padding:15px 20px;
+
+    border-left:6px solid #22c55e;
+
+    border-radius:10px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    transform:translateX(400px);
+
+    transition:.35s;
+
+    z-index:9999;
+
+}
+
+.toast.show{
+
+    transform:translateX(0);
+
+}
+
+.toast ion-icon{
+
+    font-size:24px;
+
+    color:#22c55e;
+
+}
+/*==================================
+LOADING CONTENT
+==================================*/
+
+.loader-content{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:20px;
+
+}
+
+.spinner{
+
+    width:55px;
+
+    height:55px;
+
+    border:5px solid #e5e7eb;
+
+    border-top:5px solid #0b3d91;
+
+    border-radius:50%;
+
+    animation:spin 1s linear infinite;
+
+}
+
+@keyframes spin{
+
+    100%{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+.loader-content p{
+
+    font-weight:bold;
+
+    color:#0b3d91;
+
+    font-size:18px;
+
+}
 
 /* Mobile */
 

@@ -1,62 +1,194 @@
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import {
+    loginUser,
+    guestOnly,
+    logoutUser
+} from "./auth-utils.js";
+
+import { db } from "./firebase-config.js";
 
 import {
-    getAuth,
-    signInWithEmailAndPassword
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+// Only guests should access this page
+guestOnly();
+
+// DOM Elements
+const form = document.getElementById("loginForm");
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+
+/*==================================
+LOADING
+==================================*/
+
+const loginButton = form.querySelector("button");
+
+function setLoading(state){
+
+    if(state){
+
+        loginButton.disabled = true;
+        loginButton.innerHTML = `
+            <ion-icon name="hourglass-outline"></ion-icon>
+            Signing In...
+        `;
+
+    }else{
+
+        loginButton.disabled = false;
+        loginButton.innerHTML = `
+            <ion-icon name="lock-closed"></ion-icon>
+            Login
+        `;
+
+    }
+
 }
-from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+/*==================================
+STAFF LOGIN
+==================================*/
 
-const firebaseConfig = {
-    apiKey: "AIzaSyCtK8uoKkaZVVnzRFOplPxLNxKnpVCf24Q",
-    authDomain: "rose-a7757.firebaseapp.com",
-    projectId: "rose-a7757",
-    storageBucket: "rose-a7757.firebasestorage.app",
-    messagingSenderId: "648446292944",
-    appId: "1:648446292944:web:8e50120d78800d4d487fd5"
-};
-
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-
-const form =
-document.getElementById("loginForm");
-
-form.addEventListener("submit", async (e) => {
+form.addEventListener("submit", async (e)=>{
 
     e.preventDefault();
 
-    const email =
-    document.getElementById("email").value;
+    const emailValue =
+    email.value.trim().toLowerCase();
 
-    const password =
-    document.getElementById("password").value;
+    const passwordValue =
+    password.value.trim();
 
-    try {
 
-        alert("Checking login...");
+    if(emailValue === ""){
 
-        await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
+        alert("Please enter your email.");
+
+        email.focus();
+
+        return;
+
+    }
+
+
+    if(passwordValue === ""){
+
+        alert("Please enter your password.");
+
+        password.focus();
+
+        return;
+
+    }
+
+
+    setLoading(true);
+
+
+    try{
+
+        const user =
+        await loginUser(
+            emailValue,
+            passwordValue
         );
 
-        alert("Login successful ✅");
 
-        window.location.href =
-        "dashboard.html";
+        const userSnapshot =
+        await getDoc(
+            doc(
+                db,
+                "users",
+                user.uid
+            )
+        );
 
-    } catch(error) {
+
+        if(!userSnapshot.exists()){
+
+            await logoutUser();
+
+            setLoading(false);
+
+            alert(
+            "User account record not found."
+            );
+
+            return;
+
+        }
+
+
+        const userData =
+        userSnapshot.data();
+
+
+
+        if(userData.role !== "staff"){
+
+            await logoutUser();
+
+            setLoading(false);
+
+            alert(
+            "Access denied. Staff account only."
+            );
+
+            return;
+
+        }
+
+
+
+        alert(
+        "Staff login successful ✅"
+        );
+
+
+        window.location.replace(
+        "dashboard.html"
+        );
+
+
+    }
+
+
+    catch(error){
+
+
+        setLoading(false);
+
 
         console.error(error);
 
-        alert(
-            "Login failed ❌\n\n" +
+
+
+        if(error.code === "auth/invalid-credential"){
+
+            alert(
+            "Invalid email or password."
+            );
+
+        }
+
+        else if(error.code === "auth/network-request-failed"){
+
+            alert(
+            "Check your internet connection."
+            );
+
+        }
+
+        else{
+
+            alert(
             error.message
-        );
+            );
+
+        }
 
     }
+
 
 });
