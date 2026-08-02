@@ -25,24 +25,42 @@ googleProvider.setCustomParameters({
     prompt: "select_account"
 });
 
+
+
+
+
+
+
+
+
+const googleProvider = new GoogleAuthProvider();
+
+googleProvider.setCustomParameters({
+    prompt: "select_account"
+});
+
+/*==================================
+REGISTER
+==================================*/
+
 export async function registerUser(fullName, email, password, phone) {
 
-    const userCredential =
-        await createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
+    const credential =
+    await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+    );
 
-    const user = userCredential.user;
+    const user = credential.user;
 
-    await updateProfile(user, {
+    await updateProfile(user,{
         displayName: fullName
     });
 
-    await setDoc(doc(db, "users", user.uid), {
+    await setDoc(doc(db,"users",user.uid),{
 
-        uid: user.uid,
+        uid:user.uid,
 
         fullName,
 
@@ -50,15 +68,15 @@ export async function registerUser(fullName, email, password, phone) {
 
         phone,
 
-        role: "customer",
+        role:"customer",
 
-        provider: "email",
+        provider:"email",
 
-        photoURL: user.photoURL || "",
+        photoURL:user.photoURL || "",
 
-        createdAt: serverTimestamp(),
+        createdAt:serverTimestamp(),
 
-        lastLogin: serverTimestamp()
+        lastLogin:serverTimestamp()
 
     });
 
@@ -66,21 +84,25 @@ export async function registerUser(fullName, email, password, phone) {
 
 }
 
-export async function loginUser(email, password) {
+/*==================================
+LOGIN
+==================================*/
 
-    const userCredential =
-        await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
+export async function loginUser(email,password){
 
-    const user = userCredential.user;
+    const credential =
+    await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+    );
+
+    const user = credential.user;
 
     await updateDoc(
-        doc(db, "users", user.uid),
+        doc(db,"users",user.uid),
         {
-            lastLogin: serverTimestamp()
+            lastLogin:serverTimestamp()
         }
     );
 
@@ -88,49 +110,56 @@ export async function loginUser(email, password) {
 
 }
 
-export async function googleLogin() {
+/*==================================
+GOOGLE LOGIN
+==================================*/
 
-    const result = await signInWithPopup(
+export async function googleLogin(){
+
+    const result =
+    await signInWithPopup(
         auth,
         googleProvider
     );
 
     const user = result.user;
 
-    const userRef = doc(db, "users", user.uid);
+    const userRef =
+    doc(db,"users",user.uid);
 
-    const snapshot = await getDoc(userRef);
+    const snap =
+    await getDoc(userRef);
 
-    if (!snapshot.exists()) {
+    if(!snap.exists()){
 
-        await setDoc(userRef, {
+        await setDoc(userRef,{
 
-            uid: user.uid,
+            uid:user.uid,
 
-            fullName: user.displayName || "Customer",
+            fullName:user.displayName || "Customer",
 
-            email: user.email,
+            email:user.email,
 
-            phone: "",
+            phone:"",
 
-            role: "customer",
+            role:"customer",
 
-            provider: "google",
+            provider:"google",
 
-            photoURL: user.photoURL || "",
+            photoURL:user.photoURL || "",
 
-            createdAt: serverTimestamp(),
+            createdAt:serverTimestamp(),
 
-            lastLogin: serverTimestamp()
+            lastLogin:serverTimestamp()
 
         });
 
-    } else {
+    }
 
-        await updateDoc(userRef, {
+    else{
 
-            lastLogin: serverTimestamp()
-
+        await updateDoc(userRef,{
+            lastLogin:serverTimestamp()
         });
 
     }
@@ -143,9 +172,12 @@ export async function googleLogin() {
 RESET PASSWORD
 ==================================*/
 
-export async function resetPassword(email) {
+export async function resetPassword(email){
 
-    return await sendPasswordResetEmail(auth, email);
+    return await sendPasswordResetEmail(
+        auth,
+        email
+    );
 
 }
 
@@ -153,9 +185,9 @@ export async function resetPassword(email) {
 LOGOUT
 ==================================*/
 
-export async function logoutUser() {
+export async function logoutUser(){
 
-    return await signOut(auth);
+    await signOut(auth);
 
 }
 
@@ -163,7 +195,7 @@ export async function logoutUser() {
 CURRENT USER
 ==================================*/
 
-export function getCurrentUser() {
+export function getCurrentUser(){
 
     return auth.currentUser;
 
@@ -173,9 +205,9 @@ export function getCurrentUser() {
 AUTH LISTENER
 ==================================*/
 
-export function authListener(callback) {
+export function authListener(callback){
 
-    onAuthStateChanged(auth, callback);
+    return onAuthStateChanged(auth, callback);
 
 }
 
@@ -185,23 +217,21 @@ PROTECT PAGE
 
 export function protectPage(){
 
-    onAuthStateChanged(auth,(user)=>{
+    return new Promise((resolve)=>{
 
-        const loader=document.getElementById("pageLoader");
+        onAuthStateChanged(auth,(user)=>{
 
-        if(user){
+            if(!user){
 
-            if(loader){
+                window.location.replace("login.html");
 
-                loader.style.display="none";
+                return;
 
             }
 
-        }else{
+            resolve(user);
 
-            window.location.replace("login.html");
-
-        }
+        });
 
     });
 
@@ -211,26 +241,85 @@ export function protectPage(){
 GUEST ONLY
 ==================================*/
 
-    export function guestOnly(){
+export function guestOnly(){
 
-    onAuthStateChanged(auth,(user)=>{
+    return new Promise((resolve)=>{
 
-        if(user){
+        onAuthStateChanged(auth,(user)=>{
 
-            window.location.replace("home.html");
+            if(user){
 
-        }else{
+                window.location.replace("home.html");
 
-            // Guest is allowed.
-            const loader=document.getElementById("pageLoader");
-
-            if(loader){
-
-                loader.style.display="none";
+                return;
 
             }
 
-        }
+            resolve();
+
+        });
+
+    });
+
+}
+
+/*==================================
+STAFF ONLY
+==================================*/
+
+export function protectStaffPage(){
+
+    return new Promise((resolve)=>{
+
+        onAuthStateChanged(auth, async(user)=>{
+
+            if(!user){
+
+                window.location.replace("login.html");
+
+                return;
+
+            }
+
+            try{
+
+                const snap = await getDoc(
+                    doc(db,"users",user.uid)
+                );
+
+                if(!snap.exists()){
+
+                    window.location.replace("home.html");
+
+                    return;
+
+                }
+
+                const data = snap.data();
+
+                if(data.role !== "staff"){
+
+                    alert("Access denied. Staff only.");
+
+                    window.location.replace("home.html");
+
+                    return;
+
+                }
+
+                resolve(user);
+
+            }
+
+            catch(error){
+
+                console.error(error);
+
+                window.location.replace("home.html");
+
+            }
+
+        });
 
     });
 
@@ -241,44 +330,41 @@ GUEST ONLY
 LOAD USER
 ==================================*/
 
-export function loadUser() {
+export async function loadUser(){
 
-    onAuthStateChanged(auth, (user) => {
+    const user = auth.currentUser;
 
-       if (!user){
+    if(!user) return;
 
-    window.location.replace("login.html");
+    const userName =
+    document.getElementById("userName");
 
-    return;
+    const userEmail =
+    document.getElementById("userEmail");
 
-}
+    const userImage =
+    document.getElementById("userImage");
 
-        const userName = document.getElementById("userName");
-        const userEmail = document.getElementById("userEmail");
-        const userImage = document.getElementById("userImage");
+    if(userName){
 
-        if (userName) {
+        userName.textContent =
+        user.displayName || "Customer";
 
-            userName.textContent =
-                user.displayName || "Customer";
+    }
 
-        }
+    if(userEmail){
 
-        if (userEmail) {
+        userEmail.textContent =
+        user.email;
 
-            userEmail.textContent =
-                user.email;
+    }
 
-        }
+    if(userImage){
 
-        if (userImage) {
+        userImage.src =
+        user.photoURL || "default-user.png";
 
-            userImage.src =
-                user.photoURL || "default-user.png";
-
-        }
-
-    });
+    }
 
 }
 
@@ -287,60 +373,4 @@ EXPORT AUTH
 ==================================*/
 
 export { auth };
-
-/*==================================
-STAFF ONLY
-==================================*/
-
-export function protectStaffPage() {
-
-    onAuthStateChanged(auth, async (user) => {
-
-        if (!user) {
-
-            window.location.replace("login.html");
-
-            return;
-
-        }
-
-        try {
-
-            const userRef = doc(db, "users", user.uid);
-
-            const userSnap = await getDoc(userRef);
-
-            if (!userSnap.exists()) {
-
-                window.location.replace("home.html");
-
-                return;
-
-            }
-
-            const data = userSnap.data();
-
-            if (data.role !== "staff") {
-
-    alert("Access denied. Staff only.");
-
-    window.location.replace("home.html");
-
-    return;
-
-}
-
-        }
-
-        catch (error) {
-
-            console.error(error);
-
-            window.location.replace("home.html");
-
-        }
-
-    });
-
-}
 
