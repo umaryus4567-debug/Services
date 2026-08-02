@@ -17,7 +17,7 @@ import {
 GUEST ONLY
 ==================================*/
 
-//guestOnly();//
+guestOnly();
 
 /*==================================
 DOM ELEMENTS
@@ -77,28 +77,23 @@ document.getElementById("toastIcon");
 const successModal =
 document.getElementById("successModal");
 
-console.log("Registration Page Loaded");
-
-/*==================================================
-PART 2
-UI FUNCTIONS
-==================================================*/
+console.log("Registration Page Ready");
 
 /*==================================
 SHOW LOADING
 ==================================*/
 
-function showLoading() {
+function showLoading(){
 
-    loadingScreen.style.display = "flex";
+    loadingScreen.style.display="flex";
 
-    buttonText.style.display = "none";
+    buttonText.style.display="none";
 
-    buttonLoader.style.display = "inline-block";
+    buttonLoader.style.display="inline-block";
 
-    registerButton.disabled = true;
+    registerButton.disabled=true;
 
-    googleRegister.disabled = true;
+    googleRegister.disabled=true;
 
 }
 
@@ -106,17 +101,17 @@ function showLoading() {
 HIDE LOADING
 ==================================*/
 
-function hideLoading() {
+function hideLoading(){
 
-    loadingScreen.style.display = "none";
+    loadingScreen.style.display="none";
 
-    buttonText.style.display = "inline";
+    buttonText.style.display="inline";
 
-    buttonLoader.style.display = "none";
+    buttonLoader.style.display="none";
 
-    registerButton.disabled = false;
+    registerButton.disabled=false;
 
-    googleRegister.disabled = false;
+    googleRegister.disabled=false;
 
 }
 
@@ -124,31 +119,33 @@ function hideLoading() {
 TOAST
 ==================================*/
 
-function showToast(message, type = "success") {
+function showToast(message,type="success"){
 
-    toastMessage.textContent = message;
+    toastMessage.textContent=message;
 
     toast.classList.add("show");
 
-    if (type === "success") {
+    if(type==="success"){
 
-        toast.style.borderLeft = "6px solid #22c55e";
+        toast.style.borderLeft="6px solid #22c55e";
 
-        toastIcon.className = "fa-solid fa-circle-check";
-
-    } else {
-
-        toast.style.borderLeft = "6px solid #ef4444";
-
-        toastIcon.className = "fa-solid fa-circle-xmark";
+        toastIcon.className="fa-solid fa-circle-check";
 
     }
 
-    setTimeout(() => {
+    else{
+
+        toast.style.borderLeft="6px solid #ef4444";
+
+        toastIcon.className="fa-solid fa-circle-xmark";
+
+    }
+
+    setTimeout(()=>{
 
         toast.classList.remove("show");
 
-    }, 3000);
+    },3000);
 
 }
 
@@ -156,9 +153,9 @@ function showToast(message, type = "success") {
 SUCCESS MODAL
 ==================================*/
 
-function showSuccessModal() {
+function showSuccessModal(){
 
-    successModal.style.display = "flex";
+    successModal.style.display="flex";
 
 }
 
@@ -166,81 +163,96 @@ function showSuccessModal() {
 PASSWORD TOGGLE
 ==================================*/
 
-function toggleVisibility(input, button) {
+function toggleVisibility(input,button){
 
-    const icon = button.querySelector("i");
+    const icon=button.querySelector("i");
 
-    if (input.type === "password") {
+    if(input.type==="password"){
 
-        input.type = "text";
+        input.type="text";
 
-        icon.classList.replace("fa-eye", "fa-eye-slash");
+        icon.classList.replace(
+            "fa-eye",
+            "fa-eye-slash"
+        );
 
-    } else {
+    }
 
-        input.type = "password";
+    else{
 
-        icon.classList.replace("fa-eye-slash", "fa-eye");
+        input.type="password";
+
+        icon.classList.replace(
+            "fa-eye-slash",
+            "fa-eye"
+        );
 
     }
 
 }
 
-togglePassword.addEventListener("click", () => {
+togglePassword.addEventListener("click",()=>{
 
-    toggleVisibility(password, togglePassword);
+    toggleVisibility(
+        password,
+        togglePassword
+    );
 
 });
 
-toggleConfirmPassword.addEventListener("click", () => {
+toggleConfirmPassword.addEventListener("click",()=>{
 
-    toggleVisibility(confirmPassword, toggleConfirmPassword);
+    toggleVisibility(
+        confirmPassword,
+        toggleConfirmPassword
+    );
 
 });
 
 /*==================================================
-PART 3
+PART 2
 VALIDATION
 ==================================================*/
 
-function validateEmail(email) {
+function validateEmail(email){
 
-    const pattern =
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    return pattern.test(email.trim());
-
-}
-
-function validatePhone(phone) {
-
-    return /^[0-9]{11}$/.test(phone.trim());
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+        email.trim()
+    );
 
 }
 
-function markInvalid(input) {
+function validatePhone(phone){
 
-    input.style.borderColor = "#ef4444";
-
-    input.focus();
+    return /^[0-9]{11}$/.test(
+        phone.trim()
+    );
 
 }
 
-function clearErrors() {
+function clearErrors(){
 
-    document.querySelectorAll("input").forEach(input => {
+    document.querySelectorAll("input").forEach(input=>{
 
-        input.style.borderColor = "#e2e8f0";
+        input.style.borderColor="#e2e8f0";
 
     });
 
 }
 
-function validateForm() {
+function markInvalid(input){
+
+    input.style.borderColor="#ef4444";
+
+    input.focus();
+
+}
+
+function validateForm(){
 
     clearErrors();
 
-    if (fullName.value.trim().length < 3) {
+    if(fullName.value.trim().length < 3){
 
         showToast(
             "Full name must contain at least 3 characters.",
@@ -253,7 +265,7 @@ function validateForm() {
 
     }
 
-    if (!validateEmail(email.value)) {
+    if(!validateEmail(email.value)){
 
         showToast(
             "Please enter a valid email address.",
@@ -266,7 +278,7 @@ function validateForm() {
 
     }
 
-    if (!validatePhone(phone.value)) {
+    if(!validatePhone(phone.value)){
 
         showToast(
             "Phone number must contain exactly 11 digits.",
@@ -279,7 +291,7 @@ function validateForm() {
 
     }
 
-    if (password.value.length < 6) {
+    if(password.value.length < 6){
 
         showToast(
             "Password must be at least 6 characters.",
@@ -292,7 +304,7 @@ function validateForm() {
 
     }
 
-    if (password.value !== confirmPassword.value) {
+    if(password.value !== confirmPassword.value){
 
         showToast(
             "Passwords do not match.",
@@ -305,7 +317,7 @@ function validateForm() {
 
     }
 
-    if (!agreeTerms.checked) {
+    if(!agreeTerms.checked){
 
         showToast(
             "Please agree to the Terms & Conditions.",
@@ -319,9 +331,8 @@ function validateForm() {
     return true;
 
 }
-
 /*==================================================
-PART 4
+PART 3
 REGISTER USER
 ==================================================*/
 
@@ -341,7 +352,7 @@ registerForm.addEventListener("submit", async (e) => {
 
             email.value.trim().toLowerCase(),
 
-            password.value.trim(),
+            password.value,
 
             phone.value.trim()
 
@@ -367,7 +378,9 @@ registerForm.addEventListener("submit", async (e) => {
 
         hideLoading();
 
-        showToast("Account created successfully!");
+        showToast(
+            "Account created successfully!"
+        );
 
         showSuccessModal();
 
@@ -381,17 +394,20 @@ registerForm.addEventListener("submit", async (e) => {
 
     }
 
-    catch (error) {
+    catch(error){
 
         hideLoading();
 
         console.error(error);
 
-        switch (error.code) {
+        switch(error.code){
 
             case "auth/email-already-in-use":
 
-                showToast("This email is already registered.", "error");
+                showToast(
+                    "This email is already registered.",
+                    "error"
+                );
 
                 markInvalid(email);
 
@@ -399,7 +415,10 @@ registerForm.addEventListener("submit", async (e) => {
 
             case "auth/invalid-email":
 
-                showToast("Invalid email address.", "error");
+                showToast(
+                    "Invalid email address.",
+                    "error"
+                );
 
                 markInvalid(email);
 
@@ -407,7 +426,10 @@ registerForm.addEventListener("submit", async (e) => {
 
             case "auth/weak-password":
 
-                showToast("Password is too weak.", "error");
+                showToast(
+                    "Password is too weak.",
+                    "error"
+                );
 
                 markInvalid(password);
 
@@ -415,22 +437,27 @@ registerForm.addEventListener("submit", async (e) => {
 
             case "auth/network-request-failed":
 
-                showToast("Please check your internet connection.", "error");
+                showToast(
+                    "Please check your internet connection.",
+                    "error"
+                );
 
                 break;
 
             default:
 
-                showToast(error.message, "error");
+                showToast(
+                    error.message,
+                    "error"
+                );
 
         }
 
     }
 
 });
-
 /*==================================================
-PART 5
+PART 4
 GOOGLE REGISTRATION
 ==================================================*/
 
@@ -446,9 +473,9 @@ googleRegister.addEventListener("click", async () => {
 
             uid: user.uid,
 
-            title: "Google Registration",
+            title: "Welcome to UY Power Solutions",
 
-            message: "Your Google account has been linked successfully.",
+            message: "Your Google account has been registered successfully.",
 
             type: "success",
 
@@ -462,28 +489,32 @@ googleRegister.addEventListener("click", async () => {
 
         hideLoading();
 
-        showToast("Google registration successful!");
+        showToast(
+            "Google registration successful!"
+        );
+
+        showSuccessModal();
 
         setTimeout(() => {
 
             window.location.href = "home.html";
 
-        }, 1500);
+        }, 1800);
 
     }
 
-    catch (error) {
+    catch(error){
 
         hideLoading();
 
         console.error(error);
 
-        switch (error.code) {
+        switch(error.code){
 
             case "auth/popup-closed-by-user":
 
                 showToast(
-                    "Google sign-in was cancelled.",
+                    "Google sign in was cancelled.",
                     "error"
                 );
 
@@ -492,7 +523,7 @@ googleRegister.addEventListener("click", async () => {
             case "auth/popup-blocked":
 
                 showToast(
-                    "Your browser blocked the popup.",
+                    "Popup blocked by your browser.",
                     "error"
                 );
 
@@ -520,14 +551,40 @@ googleRegister.addEventListener("click", async () => {
 
 });
 
+/*==================================================
+STARTUP
+==================================================*/
+
 window.addEventListener("load", () => {
 
-    setTimeout(() => {
+    console.log("====================================");
 
-        document
-            .getElementById("loader")
-            ?.classList.add("loader-hide");
+    console.log("UY POWER SOLUTIONS");
 
-    }, 700);
+    console.log("Registration System Ready");
+
+    console.log("Firebase Connected");
+
+    console.log("====================================");
+
+});
+
+/*==================================================
+PAGE LOADER
+==================================================*/
+
+window.addEventListener("load", () => {
+
+    const loader = document.getElementById("loader");
+
+    if(loader){
+
+        setTimeout(() => {
+
+            loader.classList.add("loader-hide");
+
+        },700);
+
+    }
 
 });
