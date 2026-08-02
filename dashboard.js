@@ -4,11 +4,14 @@ import { onAuthStateChanged }
 from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
 import {
-    protectStaffPage
+    protectStaffPage,
+    logoutUser
 } from "./auth-utils.js";
 
-protectStaffPage();
+await protectStaffPage();
+
 let allRequests = [];
+
 let technicians = [];
 import {
 collection,
@@ -50,7 +53,8 @@ document.getElementById("requestsContainer");
 const searchInput =
 document.getElementById("searchInput");
 
-
+const logoutButton =
+document.getElementById("logoutButton");
 /* ==========================
    LOAD REQUESTS
 ========================== */
@@ -569,14 +573,47 @@ function getStatusColor(status){
     }
 }
 
-window.addEventListener("load", () => {
+const loader =
+document.getElementById("loader");
 
-    setTimeout(() => {
+if(loader){
 
-        document
-            .getElementById("loader")
-            ?.classList.add("loader-hide");
+    setTimeout(()=>{
 
-    }, 700);
+        loader.classList.add("loader-hide");
 
-});
+    },500);
+
+}
+
+/* ==========================
+   LOGOUT
+========================== */
+
+if(logoutButton){
+
+    logoutButton.addEventListener("click", async ()=>{
+
+        try{
+
+            logoutButton.disabled = true;
+
+            await logoutUser();
+
+            window.location.replace("login.html");
+
+        }
+
+        catch(error){
+
+            console.error(error);
+
+            logoutButton.disabled = false;
+
+            alert("Logout failed.");
+
+        }
+
+    });
+
+}

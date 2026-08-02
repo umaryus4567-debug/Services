@@ -36,14 +36,7 @@ const logoutButton =
 document.getElementById("logoutButton");
 
 protectPage();
-
-onAuthStateChanged(auth,(user)=>{
-
-    if(!user) return;
-
-    loadUser();
-
-});
+loadUser();
 onAuthStateChanged(auth, (user) => {
 
     if (!user) return;
@@ -117,21 +110,25 @@ if (notificationButton) {
 
     });
     
-    if (logoutButton) {
+if (logoutButton) {
 
     logoutButton.addEventListener("click", async () => {
 
         try {
 
+            logoutButton.disabled = true;
+
             await logoutUser();
 
-            window.location.href = "login.html";
+            window.location.replace("login.html");
 
         }
 
         catch (error) {
 
             console.error(error);
+
+            logoutButton.disabled = false;
 
         }
 
@@ -189,39 +186,43 @@ toast.className="toast";
 SHOW STAFF DASHBOARD BUTTON
 ==================================*/
 
-onAuthStateChanged(auth, async (user) => {
+const staffContainer =
+document.getElementById("staffDashboardContainer");
 
-    if (!user) return;
+if(staffContainer){
 
-    const container =
-    document.getElementById("staffDashboardContainer");
+    try{
 
-    if (!container) return;
+        const user = auth.currentUser;
 
-    try {
+        if(user){
 
-        const snap = await getDoc(
-            doc(db, "users", user.uid)
-        );
+            const snap = await getDoc(
+                doc(db,"users",user.uid)
+            );
 
-        if (!snap.exists()) return;
+            if(snap.exists()){
 
-        const data = snap.data();
+                const data = snap.data();
 
-        if (data.role === "staff") {
+                if(data.role === "staff"){
 
-            container.innerHTML = `
+                    staffContainer.innerHTML = `
 
-                <a href="staff.html"
-                   class="staff-dashboard-btn">
+                    <a href="dashboard.html"
+                    class="staff-dashboard-btn">
 
-                   <i class="fa-solid fa-user-shield"></i>
+                        <i class="fa-solid fa-user-shield"></i>
 
-                   Staff Dashboard
+                        Staff Dashboard
 
-                </a>
+                    </a>
 
-            `;
+                    `;
+
+                }
+
+            }
 
         }
 
@@ -233,7 +234,7 @@ onAuthStateChanged(auth, async (user) => {
 
     }
 
-});
+}
 
 window.addEventListener("load", () => {
 
