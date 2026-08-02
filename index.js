@@ -462,6 +462,8 @@ GOOGLE REGISTRATION
 ==================================================*/
 
 googleRegister.addEventListener("click", async () => {
+  console.log("Google button clicked");
+alert("Google button clicked");
 
     showLoading();
 
